@@ -1,7 +1,7 @@
 ## *Universidad Nacional de El Salvador*
 ### _Colaboración Programación III e Ingeniería de Software_
 ### _Ciclo II-2022_
-## **Boletoman Microservicio Compras**
+## **Boletoman Microservicio Reservaciones**
 <br>
 
 ### Integrantes
