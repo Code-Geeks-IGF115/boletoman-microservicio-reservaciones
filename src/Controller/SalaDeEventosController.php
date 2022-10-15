@@ -118,13 +118,16 @@ class SalaDeEventosController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_sala_de_eventos_delete', methods: ['POST'])]
-    public function delete(Request $request, SalaDeEventos $salaDeEvento, SalaDeEventosRepository $salaDeEventosRepository): Response
+    public function delete(Request $request, SalaDeEventos $salaDeEvento = null, SalaDeEventosRepository $salaDeEventosRepository): Response
     {
         try{
+            if(!$salaDeEvento){
+                throw new Exception('Sala de eventos no existe.');
+            }
             $salaDeEventosRepository->remove($salaDeEvento, true);
             return $this->responseHelper->responseMessage("Sala de Eventos Eliminada.");
         }catch(Exception $e){
-            return $this->responseHelper->responseDatosNoValidos("No se encontraron datos.");
+            return $this->responseHelper->responseDatosNoValidos($e->getMessage());
         }
     }
 }
