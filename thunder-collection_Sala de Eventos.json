@@ -1,0 +1,181 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Sala de Eventos",
+    "dateExported": "2022-10-15T17:07:27.153Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "8e3b889a-45a4-4060-af89-61572ecec297",
+            "colId": "6029ad86-d91b-41d2-a344-0045611ece1c",
+            "containerId": "",
+            "name": "Lista",
+            "url": "localhost:8000/sala/de/eventos",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2022-10-15T16:46:14.426Z",
+            "modified": "2022-10-15T16:46:14.426Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "6f409858-b1c4-4854-83aa-5e19b3332bf4",
+            "colId": "6029ad86-d91b-41d2-a344-0045611ece1c",
+            "containerId": "",
+            "name": "Ver",
+            "url": "localhost:8000/sala/de/eventos/2",
+            "method": "GET",
+            "sortNum": 15000,
+            "created": "2022-10-15T17:03:53.201Z",
+            "modified": "2022-10-15T17:04:14.315Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "4b4433ba-bc6b-4faf-ac24-3b07e32316ac",
+            "colId": "6029ad86-d91b-41d2-a344-0045611ece1c",
+            "containerId": "",
+            "name": "Editar",
+            "url": "localhost:8000/sala/de/eventos/2/edit",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2022-10-15T16:46:21.881Z",
+            "modified": "2022-10-15T17:03:12.803Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "sala_de_eventos[nombre]",
+                        "value": "test 4 nombre"
+                    },
+                    {
+                        "name": "sala_de_eventos[direccion]",
+                        "value": "test 4 direccion"
+                    },
+                    {
+                        "name": "sala_de_eventos[telefono]",
+                        "value": "8516-2222"
+                    },
+                    {
+                        "name": "sala_de_eventos[email]",
+                        "value": "test 4 email"
+                    },
+                    {
+                        "name": "sala_de_eventos[forma]",
+                        "value": "1"
+                    },
+                    {
+                        "name": "sala_de_eventos[filas]",
+                        "value": "4"
+                    },
+                    {
+                        "name": "sala_de_eventos[columnas]",
+                        "value": "2"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "e2310c51-5c88-4e0e-bd02-55958a17f822",
+            "colId": "6029ad86-d91b-41d2-a344-0045611ece1c",
+            "containerId": "",
+            "name": "Eliminar",
+            "url": "localhost:8000/sala/de/eventos/2",
+            "method": "POST",
+            "sortNum": 25000,
+            "created": "2022-10-15T17:04:32.346Z",
+            "modified": "2022-10-15T17:05:23.104Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "sala_de_eventos[nombre]",
+                        "value": "test 4 nombre"
+                    },
+                    {
+                        "name": "sala_de_eventos[direccion]",
+                        "value": "test 4 direccion"
+                    },
+                    {
+                        "name": "sala_de_eventos[telefono]",
+                        "value": "8516-2222"
+                    },
+                    {
+                        "name": "sala_de_eventos[email]",
+                        "value": "test 4 email"
+                    },
+                    {
+                        "name": "sala_de_eventos[forma]",
+                        "value": "1"
+                    },
+                    {
+                        "name": "sala_de_eventos[filas]",
+                        "value": "4"
+                    },
+                    {
+                        "name": "sala_de_eventos[columnas]",
+                        "value": "2"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "f87dba44-e5cf-4003-86b2-d4278210a99f",
+            "colId": "6029ad86-d91b-41d2-a344-0045611ece1c",
+            "containerId": "",
+            "name": "Nuevo",
+            "url": "localhost:8000/sala/de/eventos/new",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2022-10-15T17:01:52.343Z",
+            "modified": "2022-10-15T17:06:25.295Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "sala_de_eventos[nombre]",
+                        "value": "test 3 nombre"
+                    },
+                    {
+                        "name": "sala_de_eventos[direccion]",
+                        "value": "test 3 direccion"
+                    },
+                    {
+                        "name": "sala_de_eventos[telefono]",
+                        "value": "8516-9522"
+                    },
+                    {
+                        "name": "sala_de_eventos[email]",
+                        "value": "test 3 email"
+                    },
+                    {
+                        "name": "sala_de_eventos[forma]",
+                        "value": "1"
+                    },
+                    {
+                        "name": "sala_de_eventos[filas]",
+                        "value": "1"
+                    },
+                    {
+                        "name": "sala_de_eventos[columnas]",
+                        "value": "1"
+                    }
+                ]
+            },
+            "tests": []
+        }
+    ]
+}

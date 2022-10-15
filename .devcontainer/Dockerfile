@@ -15,7 +15,7 @@ RUN sudo apt install -y symfony-cli
 # Install PostgreSQL driver
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions pgsql pdo_pgsql
-
+ENV XDEBUG_MODE=off
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>

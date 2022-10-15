@@ -1,12 +1,4 @@
-Universidad Nacional de El Salvador
------------------------------------
-Colaboración Programación III e Ingeniería de Software
-------------------------------------------------------
-Ciclo II-2022
--------------
-Ejercicio de Introducción 
-=========================
-**Commandos**
+# **Commandos**
 
 *1. crear nuevo controller*
 ```
