@@ -22,16 +22,20 @@ class Celda
     private ?int $columna = null;
 
     #[ORM\Column]
-    private ?int $cantidadMesas = null;
+    private ?int $cantidadMesas = 0;
 
     #[ORM\Column]
-    private ?int $cantidadButacas = null;
+    private ?int $cantidadButacas = 0;
 
     #[ORM\ManyToOne(inversedBy: 'celdas')]
     private ?CategoriaButaca $categoriaButaca = null;
 
     #[ORM\OneToMany(mappedBy: 'celda', targetEntity: Butaca::class, orphanRemoval: true)]
     private Collection $butacas;
+
+    #[ORM\ManyToOne(inversedBy: 'celdas')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?SalaDeEventos $salaDeEventos = null;
 
     public function __construct()
     {
@@ -129,6 +133,18 @@ class Celda
                 $butaca->setCelda(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSalaDeEventos(): ?SalaDeEventos
+    {
+        return $this->salaDeEventos;
+    }
+
+    public function setSalaDeEventos(?SalaDeEventos $salaDeEventos): self
+    {
+        $this->salaDeEventos = $salaDeEventos;
 
         return $this;
     }
