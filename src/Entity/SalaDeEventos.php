@@ -39,9 +39,13 @@ class SalaDeEventos
     #[ORM\OneToMany(mappedBy: 'salaDeEventos', targetEntity: CategoriaButaca::class, orphanRemoval: true)]
     private Collection $categoriaButacas;
 
+    #[ORM\OneToMany(mappedBy: 'salaDeEventos', targetEntity: Celda::class, orphanRemoval: true)]
+    private Collection $celdas;
+
     public function __construct()
     {
         $this->categoriaButacas = new ArrayCollection();
+        $this->celdas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -157,6 +161,36 @@ class SalaDeEventos
             // set the owning side to null (unless already changed)
             if ($categoriaButaca->getSalaDeEventos() === $this) {
                 $categoriaButaca->setSalaDeEventos(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Celda>
+     */
+    public function getCeldas(): Collection
+    {
+        return $this->celdas;
+    }
+
+    public function addCelda(Celda $celda): self
+    {
+        if (!$this->celdas->contains($celda)) {
+            $this->celdas->add($celda);
+            $celda->setSalaDeEventos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCelda(Celda $celda): self
+    {
+        if ($this->celdas->removeElement($celda)) {
+            // set the owning side to null (unless already changed)
+            if ($celda->getSalaDeEventos() === $this) {
+                $celda->setSalaDeEventos(null);
             }
         }
 

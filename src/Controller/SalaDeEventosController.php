@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\SalaDeEventos;
+use App\Entity\{SalaDeEventos,Celda};
 use App\Form\SalaDeEventosType;
+use App\Repository\CeldaRepository;
 use App\Repository\SalaDeEventosRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,12 +18,10 @@ use Exception;
 class SalaDeEventosController extends AbstractController
 {
     private ResponseHelper $responseHelper;
-    private TranslatorInterface $translator;
 
-    public function __construct(ResponseHelper $responseHelper, TranslatorInterface $translator)
+    public function __construct(ResponseHelper $responseHelper)
     {
         $this->responseHelper=$responseHelper;
-        $this->translator = $translator;
     }
     /** Tarea: Función verSalasDeEventos
     * Nombre: Roman Mauricio Hernández Beltrán
@@ -38,7 +37,7 @@ class SalaDeEventosController extends AbstractController
         return $this->responseHelper->responseDatos(['salas'=>$salaDeEvento]);
     }
 
-     /** Tarea: Función crearSalaDeEventos
+      /** Tarea: Función crearSalaDeEventos
      * Nombre: Carlos Josué Argueta Alvarado
      * Carnet: AA20099
      * Estado: Aprobado
@@ -48,24 +47,36 @@ class SalaDeEventosController extends AbstractController
      */
     #[Route('/new', name: 'app_sala_de_eventos_new', methods: ['POST'])]
     public function new(Request $request, 
-    SalaDeEventosRepository $salaDeEventosRepository): JsonResponse
+    SalaDeEventosRepository $salaDeEventosRepository,
+    CeldaRepository $celdaRepository): JsonResponse
     {  
         $salaDeEvento = new SalaDeEventos();
         $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            try{
-                $salaDeEventosRepository->save($salaDeEvento, true);//para guardar en base de datos
-                return $this->responseHelper->responseMessage("Sala de Eventos Guardada.");      
-            }catch(Exception $e){
-                return $this->responseHelper->responseDatosNoValidos();
-            }
+                //para guardar en base de datos
+                $salaDeEventosRepository->save($salaDeEvento, true);
+                
+                //crear celdas
+                for ($fila=1; $fila <= $salaDeEvento->getFilas() ; $fila++) { 
+                    for ($columna=1; $columna <= $salaDeEvento->getColumnas() ; $columna++) { 
+                        $celda = new Celda();
+                        $celda->setFila($fila);
+                        $celda->setColumna($columna);
+                        $celda->setSalaDeEventos($salaDeEvento);
+                        $celdaRepository->save($celda,true);
+                    }
+                }
+
+                return $this->responseHelper->responseMessage("Sala de Eventos Guardada.");
         }       
         else{
-            return $this->responseHelper->responseDatosNoValidos();
+            return $this->responseHelper->responseDatosNoValidos("Sala de Eventos Guardada.");
+            
         } 
-         
+
     }  
+    
     
 
     /** Tarea: Función verSalaDeEventos
@@ -99,23 +110,26 @@ class SalaDeEventosController extends AbstractController
      * Revisión: Andrea Melissa Monterrosa Morales
      */
     #[Route('/{id}/edit', name: 'app_sala_de_eventos_edit', methods: ['POST'])]
-    public function edit(Request $request, SalaDeEventos $salaDeEvento = null, SalaDeEventosRepository $salaDeEventosRepository): JsonResponse
+    public function edit(Request $request, SalaDeEventos $salaDeEvento = null, 
+    SalaDeEventosRepository $salaDeEventosRepository): JsonResponse
     {
         if(empty($salaDeEvento)){
-            return $this->responseHelper->responseDatosNoValidos("Sala de eventos no existe.");
-        }
-
-        $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()){
-            $salaDeEventosRepository->save($salaDeEvento, true);
-            return $this->responseHelper->responseMessage("Sala de Eventos se modificó con exito.");
+            return $this->responseHelper->responseDatosNoValidos(); 
         }
         else{
-            return $this->responseHelper->responseDatosNoValidos();
-        }
+            $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $salaDeEventosRepository->save($salaDeEvento, true);
+                return $this->responseHelper->responseMessage("Sala de Eventos se modificó con exito.");
+            }
+            else{
+                return $this->responseHelper->responseMessage("Sala de Eventos se modificó con exito.");
+            }
+        } 
     }
+
 
     #[Route('/{id}', name: 'app_sala_de_eventos_delete', methods: ['POST'])]
     public function delete(Request $request, SalaDeEventos $salaDeEvento = null, SalaDeEventosRepository $salaDeEventosRepository): Response
