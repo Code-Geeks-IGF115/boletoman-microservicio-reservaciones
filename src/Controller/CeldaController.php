@@ -61,12 +61,33 @@ class CeldaController extends AbstractController
         ]);
     }*/
 
-    #[Route('{idCategoria}/new', name: 'app_celda_new', methods: ['POST'])]
+    #[Route('/{idCategoria}/new', name: 'app_celda_new', methods: ['POST'])]
     public function new(Request $request,  
-    CategoriaButacaRepository $categoriaButacaRepository, $idCategoria): JsonResponse
+    CategoriaButacaRepository $categoriaButacaRepository,
+    CeldaRepository $celdaRepository,
+    $idCategoria): JsonResponse
     {
         //recuperando la categoria butaca
         $categoriaButaca = $categoriaButacaRepository->find($idCategoria);
+        $salaDeEvento=$categoriaButaca->getSalaDeEventos();
+        //recuperar todas las celdas de esta sala de eventos
+        $celdas=$celdaRepository->findBy(['categoriaButaca'=>$categoriaButaca]);
+        //crear celdas
+        for ($fila=1; $fila <= $salaDeEvento->getFilas() ; $fila++) { 
+            for ($columna=1; $columna <= $salaDeEvento->getColumnas() ; $columna++) { 
+                //recorrer las celdas del request y las celdas de la base de datos en
+                //simultaneo y comparar los atributos de fila y columna
+                // y si son iguales entonces actualizar(update) 
+                //la celda (cantidad butacas y asignar categoriaButaca)y 
+                // guardarla en la base de datos
+
+                // $celda = new Celda();
+                // $celda->getFila($fila);
+                // $celda->getColumna($columna);
+                // $celda->setSalaDeEventos($salaDeEvento);
+                // $celdaRepository->save($celda,true);
+            }
+        }
         // $celdaRepository->save($celda, true);
        
         return $this->responseHelper->responseMessage("celdas guardadas");
