@@ -61,30 +61,14 @@ class CeldaController extends AbstractController
         ]);
     }*/
 
-    #[Route('{id}/new', name: 'app_celda_new', methods: ['POST'])]
+    #[Route('{idCategoria}/new', name: 'app_celda_new', methods: ['POST'])]
     public function new(Request $request,  
-    CategoriaButacaRepository $categoriaButacaRepository, $id): JsonResponse
+    CategoriaButacaRepository $categoriaButacaRepository, $idCategoria): JsonResponse
     {
-        /*
-        $response = new JsonResponse();
-        $celda = new Celda();
-        $form = $this->createForm(CeldaType::class, $celda);
-        $form->handleRequest($request);
-        $categoriaButaca = $categoriaButacaRepository->find($id);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $celda->setCategoriaButaca($categoriaButaca);
-            $celdaRepository->save($celda, true);
-            //$result = $serializer-> serialize(['celdas:'=>
-            //], 'json');
-            //return $this->redirectToRoute('app_celda_index', [], Response::HTTP_SEE_OTHER);
-        }
-       else{
-           //$result = $this->responseHelper->responseMessage("datos no validos");
-       }
-        /*return $this->renderForm('celda/new.html.twig', [
-            'celda' => $celda,
-            'form' => $form,
-        ]);*/
+        //recuperando la categoria butaca
+        $categoriaButaca = $categoriaButacaRepository->find($idCategoria);
+        // $celdaRepository->save($celda, true);
+       
         return $this->responseHelper->responseMessage("celdas guardadas");
     }
 
