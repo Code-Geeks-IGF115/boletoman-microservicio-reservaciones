@@ -48,6 +48,10 @@ class SalaDeEventos
         $this->celdas = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return (string) $this->getNombre();
+    }
     public function getId(): ?int
     {
         return $this->id;
