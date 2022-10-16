@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CategoriaButaca index{% endblock %}
+
+{% block body %}
+    <h1>CategoriaButaca index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Codigo</th>
+                <th>PrecioUnitario</th>
+                <th>Nombre</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for categoria_butaca in categoria_butacas %}
+            <tr>
+                <td>{{ categoria_butaca.id }}</td>
+                <td>{{ categoria_butaca.codigo }}</td>
+                <td>{{ categoria_butaca.precioUnitario }}</td>
+                <td>{{ categoria_butaca.nombre }}</td>
+                <td>
+                    <a href="{{ path('app_categoria_butaca_show', {'id': categoria_butaca.id}) }}">show</a>
+                    <a href="{{ path('app_categoria_butaca_edit', {'id': categoria_butaca.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_categoria_butaca_new') }}">Create new</a>
+{% endblock %}
