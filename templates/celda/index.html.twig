@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Celda index{% endblock %}
+
+{% block body %}
+    <h1>Celda index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fila</th>
+                <th>Columna</th>
+                <th>CantidadMesas</th>
+                <th>CantidadButacas</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for celda in celdas %}
+            <tr>
+                <td>{{ celda.id }}</td>
+                <td>{{ celda.fila }}</td>
+                <td>{{ celda.columna }}</td>
+                <td>{{ celda.cantidadMesas }}</td>
+                <td>{{ celda.cantidadButacas }}</td>
+                <td>
+                    <a href="{{ path('app_celda_show', {'id': celda.id}) }}">show</a>
+                    <a href="{{ path('app_celda_edit', {'id': celda.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_celda_new') }}">Create new</a>
+{% endblock %}
