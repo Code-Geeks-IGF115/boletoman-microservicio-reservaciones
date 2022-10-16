@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New CategoriaButaca{% endblock %}
+
+{% block body %}
+    <h1>Create new CategoriaButaca</h1>
+
+    {{ include('categoria_butaca/_form.html.twig') }}
+
+    <a href="{{ path('app_categoria_butaca_index') }}">back to list</a>
+{% endblock %}
