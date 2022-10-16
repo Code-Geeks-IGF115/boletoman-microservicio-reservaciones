@@ -100,7 +100,7 @@
             "colId": "d038bb55-6bdc-4097-a0be-3042075df508",
             "containerId": "",
             "name": "Crear Sala de Eventos",
-            "url": "localhost:8000/sala/de/eventos/new",
+            "url": "https://boletoman-reservaciones.herokuapp.com/sala/de/eventos/new",
             "method": "POST",
             "sortNum": 50000,
             "created": "2022-10-16T05:18:19.121Z",
@@ -144,4 +144,5 @@
             "tests": []
         }
     ]
+
 }

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Celda{% endblock %}
+
+{% block body %}
+    <h1>Edit Celda</h1>
+
+    {{ include('celda/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_celda_index') }}">back to list</a>
+
+    {{ include('celda/_delete_form.html.twig') }}
+{% endblock %}
