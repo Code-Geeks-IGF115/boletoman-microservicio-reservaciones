@@ -34,7 +34,7 @@ class SalaDeEventosController extends AbstractController
     public function index(SalaDeEventosRepository $salaDeEventosRepository): JsonResponse
     {
         $salaDeEvento=$salaDeEventosRepository->findAll();
-        return $this->responseHelper->responseDatos(['salas'=>$salaDeEvento]);
+        return $this->responseHelper->responseDatos(['salas'=>$salaDeEvento],['ver_evento']);
     }
 
       /** Tarea: Función crearSalaDeEventos

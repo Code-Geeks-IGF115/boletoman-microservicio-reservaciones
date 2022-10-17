@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CategoriaButacaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,15 +15,19 @@ class CategoriaButaca
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ver_evento'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['ver_evento'])]
     private ?string $codigo = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
+    #[Groups(['ver_evento'])]
     private ?string $precioUnitario = null;
 
     #[ORM\Column(length: 25)]
+    #[Groups(['ver_evento'])]
     private ?string $nombre = null;
 
     #[ORM\ManyToOne(inversedBy: 'categoriaButacas')]

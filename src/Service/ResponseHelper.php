@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\{JsonResponse};
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuilder;
 
 class ResponseHelper
 {
@@ -13,11 +14,16 @@ class ResponseHelper
     {
         $this->serializer = $serializer;
     }
-    public function responseDatos($data): JsonResponse
+    public function responseDatos($data,$groups = null): JsonResponse
     {
         $response=new JsonResponse();
         $response->headers->set('Access-Control-Allow-Origin', '%env(resolve:CORS_ALLOW_ORIGIN)%');
-        $result = $this->serializer->serialize($data,'json');
+        if($groups){
+                $result = $this->serializer->serialize($data,'json',['groups' => $groups]);
+        }else{
+
+            $result = $this->serializer->serialize($data,'json');
+        }
         return $response->fromJsonString($result);
     }
 
