@@ -79,8 +79,6 @@ class CeldaController extends AbstractController
 
         //recuperar todas las celdas de esta sala de eventos
         $celdas=$celdaRepository->findBy(['categoriaButaca'=>$categoriaButaca]);
-
-        $categoriaId=$request->query->get('celdas', null); 
         //var_dump($celdas);
          //almacenando json request en array para comparar
          if ($request->getContent()) {
@@ -106,8 +104,8 @@ class CeldaController extends AbstractController
                      $celda->setCantidadButacas($fila);
                      $celda->setCategoriaButaca($categoriaButaca);
                      $celdaRepository->save($celda,true);
-                     $result = "celdas guardadas";
-                 }
+                    }
+                    $result = "celdas guardadas";
                  
                  // $celda->getFila($fila);
                  // $celda->getColumna($columna);
