@@ -81,7 +81,7 @@ class CeldaController extends AbstractController
         $celdas=$celdaRepository->findBy(['categoriaButaca'=>$categoriaButaca]);
 
         $categoriaId=$request->query->get('celdas', null); 
-        var_dump($celdas);
+        //var_dump($celdas);
          //almacenando json request en array para comparar
          if ($request->getContent()) {
              $parametrosarray = json_decode($request->getContent(), true); 
@@ -95,7 +95,7 @@ class CeldaController extends AbstractController
                  // y si son iguales entonces actualizar(update) 
                  //la celda (cantidad butacas y asignar categoriaButaca)y 
                  // guardarla en la base de datos
-
+                $result = $fila;
                  $celda = new Celda();
                  //$celda->setFila(3+$columna-1);
                  //$celda->setColumna(1+$columna-1);
