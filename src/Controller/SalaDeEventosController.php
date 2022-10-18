@@ -96,11 +96,11 @@ class SalaDeEventosController extends AbstractController
     public function show(
         SalaDeEventos $salaDeEvento = null): JsonResponse
     {
-        try{
+        if(!$salaDeEvento){
+            return $this->responseHelper->responseMessage("Sala de eventos existe.");
+        }else{
             return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento']);
-        }catch(Exception $e){
-            return $this->responseHelper->responseDatosNoValidos("No se encontraron datos.");
-        }
+        }        
     }
     
     
