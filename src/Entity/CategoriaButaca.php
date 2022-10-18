@@ -36,7 +36,7 @@ class CategoriaButaca
     private ?SalaDeEventos $salaDeEventos = null;
     
     #[ORM\OneToMany(mappedBy: 'categoriaButaca', targetEntity: Celda::class)]
-    #[Groups(['ver_categoria'])]
+    #[Groups(['ver_categoria','ver_evento'])]
     private Collection $celdas;
 
     public function __construct()
