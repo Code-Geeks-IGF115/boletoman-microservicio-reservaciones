@@ -6,6 +6,7 @@ use App\Repository\SalaDeEventosRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SalaDeEventosRepository::class)]
 class SalaDeEventos
@@ -13,33 +14,43 @@ class SalaDeEventos
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $nombre = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $direccion = null;
 
     #[ORM\Column(length: 9)]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $telefono = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $forma = null;
 
     #[ORM\Column]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $filas = null;
 
     #[ORM\Column]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $columnas = null;
 
     #[ORM\OneToMany(mappedBy: 'salaDeEventos', targetEntity: CategoriaButaca::class, orphanRemoval: true)]
+    #[Groups(['ver_evento'])]
     private Collection $categoriaButacas;
 
     #[ORM\OneToMany(mappedBy: 'salaDeEventos', targetEntity: Celda::class, orphanRemoval: true)]
+    #[Groups(['ver_evento'])]
     private Collection $celdas;
 
     public function __construct()
@@ -48,6 +59,10 @@ class SalaDeEventos
         $this->celdas = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return (string) $this->getNombre();
+    }
     public function getId(): ?int
     {
         return $this->id;
