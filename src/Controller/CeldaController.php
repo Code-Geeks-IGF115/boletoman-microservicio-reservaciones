@@ -120,7 +120,7 @@ class CeldaController extends AbstractController
 
         }*/
 
-        return $this->responseHelper->responseMessage($result);
+        return $this->responseHelper->responseMessage(count($parametrosarray["celdas"]));
     }
 }
 
