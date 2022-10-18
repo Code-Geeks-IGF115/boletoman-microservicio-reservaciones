@@ -51,8 +51,7 @@ class SalaDeEventosController extends AbstractController
     SalaDeEventosRepository $salaDeEventosRepository,
     CeldaRepository $celdaRepository): JsonResponse
     {  
-        // recuperando frecuencias   
-        $parametros=$parametros=$request->toArray(); 
+        $parametros=$request->toArray(); 
         $request->request->replace(["sala_de_eventos"=>$parametros]);
         $salaDeEvento = new SalaDeEventos();
         $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
@@ -125,8 +124,8 @@ class SalaDeEventosController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos(); 
         }
         else{
-            // recuperando frecuencias   
-            $parametros=$request->request->all(); 
+ 
+            $parametros=$request->toArray(); 
             $request->request->replace(["sala_de_eventos"=>$parametros]);
             $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
             $form->handleRequest($request);
@@ -136,7 +135,7 @@ class SalaDeEventosController extends AbstractController
                 return $this->responseHelper->responseMessage("Sala de Eventos se modificó con exito.");
             }
             else{
-                return $this->responseHelper->responseMessage("Sala de Eventos se modificó con exito.");
+                return $this->responseHelper->responseDatosNoValidos();
             }
         } 
     }
