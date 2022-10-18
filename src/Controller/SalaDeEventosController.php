@@ -75,7 +75,7 @@ class SalaDeEventosController extends AbstractController
                 return $this->responseHelper->responseDatos(["message"=>"Sala de Eventos Guardada.", "id"=>$salaDeEvento->getId()]);
         }       
         else{
-            return $this->responseHelper->responseDatosNoValidos("Sala de Eventos Guardada.");
+            return $this->responseHelper->responseDatosNoValidos();
             
         } 
 
