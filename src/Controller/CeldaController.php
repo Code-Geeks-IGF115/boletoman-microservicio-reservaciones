@@ -73,7 +73,7 @@ class CeldaController extends AbstractController
         //recuperando la categoria butaca
         $categoriaButaca = $categoriaButacaRepository->find($idCategoria);
         if ($categoriaButaca == null) { //verifica si el id ingresado existe 
-            return $this->responseHelper->responseMessage("id no existe");
+            return $this->responseHelper->responseMessage("Categoría no existe");
         }
         $salaDeEvento = $categoriaButaca->getSalaDeEventos();
 
