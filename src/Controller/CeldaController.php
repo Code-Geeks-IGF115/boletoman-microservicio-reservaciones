@@ -95,7 +95,7 @@ class CeldaController extends AbstractController
                 $celda = new Celda();
                 for ($i = 0; $i < count($parametrosarray["celdas"]); $i++) {
                     if (($parametrosarray["celdas"][$i]["fila"] == $celdas[$fila - 1]->getFila()) &&
-                        ($parametrosarray["celdas"][0]["columna"] == $celdas[$columna - 1]->getColumna())
+                        ($parametrosarray["celdas"][$i]["columna"] == $celdas[$columna - 1]->getColumna())
                     ) {
                         $celda->setSalaDeEventos($salaDeEvento);
                         $celda->setCantidadButacas($fila);
