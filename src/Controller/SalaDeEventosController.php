@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\{SalaDeEventos,Celda};
 use App\Form\SalaDeEventosType;
+use App\Repository\CategoriaButacaRepository;
 use App\Repository\CeldaRepository;
 use App\Repository\SalaDeEventosRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,6 +51,9 @@ class SalaDeEventosController extends AbstractController
     SalaDeEventosRepository $salaDeEventosRepository,
     CeldaRepository $celdaRepository): JsonResponse
     {  
+        // recuperando frecuencias   
+        $parametros=$request->request->all(); 
+        $request->request->replace(["sala_de_eventos"=>$parametros]);
         $salaDeEvento = new SalaDeEventos();
         $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
         $form->handleRequest($request);
@@ -68,10 +72,10 @@ class SalaDeEventosController extends AbstractController
                     }
                 }
 
-                return $this->responseHelper->responseMessage("Sala de Eventos Guardada.");
+                return $this->responseHelper->responseDatos(["message"=>"Sala de Eventos Guardada.", "id"=>$salaDeEvento->getId()]);
         }       
         else{
-            return $this->responseHelper->responseDatosNoValidos("Sala de Eventos Guardada.");
+            return $this->responseHelper->responseDatosNoValidos();
             
         } 
 
@@ -90,10 +94,14 @@ class SalaDeEventosController extends AbstractController
      * Revisión: Andrea Melissa Monterrosa Morales
      */
     #[Route('/{id}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
-    public function show(SalaDeEventos $salaDeEvento): JsonResponse
+    public function show(SalaDeEventos $salaDeEvento, CeldaRepository $celdaRepository,
+    CategoriaButacaRepository $categoriaButacaRepository, Celda $celda): JsonResponse
     {
+        
+        $celdas=$celdaRepository->findBy(['categoriaButaca'=>$celda->categoriaButaca]);
         try{
-            return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento']);
+            return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento'],
+            ['\nceldas:' => $celdas]);
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos("No se encontraron datos.");
         }
@@ -117,6 +125,9 @@ class SalaDeEventosController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos(); 
         }
         else{
+            // recuperando frecuencias   
+            $parametros=$request->request->all(); 
+            $request->request->replace(["sala_de_eventos"=>$parametros]);
             $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
             $form->handleRequest($request);
 

@@ -23,6 +23,8 @@ class CategoriaButacaType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CategoriaButaca::class,
+            'csrf_protection' => false,
+            'allow_extra_fields' => true
         ]);
     }
 }
