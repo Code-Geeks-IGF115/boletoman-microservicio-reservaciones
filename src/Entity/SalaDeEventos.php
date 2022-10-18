@@ -14,35 +14,35 @@ class SalaDeEventos
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $nombre = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $direccion = null;
 
     #[ORM\Column(length: 9)]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $telefono = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $forma = null;
 
     #[ORM\Column]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $filas = null;
 
     #[ORM\Column]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $columnas = null;
 
     #[ORM\OneToMany(mappedBy: 'salaDeEventos', targetEntity: CategoriaButaca::class, orphanRemoval: true)]

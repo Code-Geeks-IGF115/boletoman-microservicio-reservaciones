@@ -26,7 +26,7 @@ class CategoriaButacaController extends AbstractController
     {
         return $this->responseHelper->responseDatos( [
             'categoriasButaca' => $categoriaButaca
-        ]);
+        ],['ver_categoria']);
     }
 
     #[Route('/new', name: 'app_categoria_butaca_new', methods: ['GET', 'POST'])]
@@ -45,7 +45,7 @@ class CategoriaButacaController extends AbstractController
             return $this->responseHelper->responseDatos(["message"=>"Categoría de butacas guardada.", "id"=>$categoriaButaca->getId()]);
         }
         
-        return $this->responseHelper->responseDatosNoValidos();
+        return $this->responseHelper->responseDatos($form->getErrors(true));
     }
     
     #[Route('/{id}/edit', name: 'app_categoria_butaca_edit', methods: ['GET', 'POST'])]

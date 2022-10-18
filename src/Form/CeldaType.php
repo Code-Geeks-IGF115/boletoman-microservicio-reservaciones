@@ -24,6 +24,8 @@ class CeldaType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Celda::class,
+            'csrf_protection' => false,
+            'allow_extra_fields' => true
         ]);
     }
 }

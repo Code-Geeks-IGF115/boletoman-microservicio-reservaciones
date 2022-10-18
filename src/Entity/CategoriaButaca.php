@@ -15,26 +15,28 @@ class CategoriaButaca
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 10)]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $codigo = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $precioUnitario = null;
 
     #[ORM\Column(length: 25)]
-    #[Groups(['ver_evento'])]
+    #[Groups(['ver_evento','ver_categoria'])]
     private ?string $nombre = null;
-
+    
     #[ORM\ManyToOne(inversedBy: 'categoriaButacas')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ver_categoria'])]
     private ?SalaDeEventos $salaDeEventos = null;
-
+    
     #[ORM\OneToMany(mappedBy: 'categoriaButaca', targetEntity: Celda::class)]
+    #[Groups(['ver_categoria'])]
     private Collection $celdas;
 
     public function __construct()
