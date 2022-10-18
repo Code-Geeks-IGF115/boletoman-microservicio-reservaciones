@@ -52,7 +52,7 @@ class SalaDeEventosController extends AbstractController
     CeldaRepository $celdaRepository): JsonResponse
     {  
         // recuperando frecuencias   
-        $parametros=$request->request->all(); 
+        $parametros=$parametros=$request->toArray(); 
         $request->request->replace(["sala_de_eventos"=>$parametros]);
         $salaDeEvento = new SalaDeEventos();
         $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
