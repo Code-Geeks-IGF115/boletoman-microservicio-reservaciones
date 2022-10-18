@@ -82,62 +82,49 @@ class CeldaController extends AbstractController
 
         $categoriaId=$request->query->get('celdas', null); 
         var_dump($celdas);
-        // //almacenando json request en array para comparar
-        // if ($request->getContent()) {
-        //     $parametrosarray = json_decode($request->getContent(), true); 
-        // }
+         //almacenando json request en array para comparar
+         if ($request->getContent()) {
+             $parametrosarray = json_decode($request->getContent(), true); 
+         }
 
-        // //crear celdas
-        // for ($fila=1; $fila <= $salaDeEvento->getFilas() ; $fila++) { 
-        //     for ($columna=1; $columna <= $salaDeEvento->getColumnas() ; $columna++) { 
-        //         //recorrer las celdas del request y las celdas de la base de datos en
-        //         //simultaneo y comparar los atributos de fila y columna
-        //         // y si son iguales entonces actualizar(update) 
-        //         //la celda (cantidad butacas y asignar categoriaButaca)y 
-        //         // guardarla en la base de datos
+         //crear celdas
+         for ($fila=1; $fila <= $salaDeEvento->getFilas() ; $fila++) { 
+             for ($columna=1; $columna <= $salaDeEvento->getColumnas() ; $columna++) { 
+                 //recorrer las celdas del request y las celdas de la base de datos en
+                 //simultaneo y comparar los atributos de fila y columna
+                 // y si son iguales entonces actualizar(update) 
+                 //la celda (cantidad butacas y asignar categoriaButaca)y 
+                 // guardarla en la base de datos
 
-        //         $celda = new Celda();
-        //         //$celda->setFila(3+$columna-1);
-        //         //$celda->setColumna(1+$columna-1);
-        //         if (($parametrosarray["celdas"][0]["fila"] == $celdas[$fila-1]->getFila()) && 
-        //         ($parametrosarray["celdas"][0]["columna"] == $celdas[$columna-1]->getColumna())){
-        //             $celda->setSalaDeEventos($salaDeEvento);
-        //             $celda->setCantidadButacas($fila);
-        //             $celda->setCategoriaButaca($categoriaButaca);
-        //             $celdaRepository->save($celda,true);
-                    
-        //             /*if ($fila-1 == $salaDeEvento->getFilas() &&  $columna-1 == $salaDeEvento->getColumnas()) {
-        //                 $result = "se guardo el primer if fila: ".$fila." columna: ".$columna;
-        //                 return $this->responseHelper->responseMessage($result);
-        //             }    */  
-        //         }
-        //         elseif (($parametrosarray["celdas"][1]["fila"] == $celdas[$fila-1]->getFila()) && 
-        //         ($parametrosarray["celdas"][1]["columna"] == $celdas[$columna-1]->getColumna())) {
-        //             $celda->setSalaDeEventos($salaDeEvento);
-        //             $celda->setCantidadButacas($fila);
-        //             $celda->setCategoriaButaca($categoriaButaca);
-        //             $celdaRepository->save($celda,true);
-        //             $result = "se guardo la segunda fila: ". $fila . " columna: " . $columna;
-        //             /*if ($fila-1 == $salaDeEvento->getFilas() && $columna-1 == $salaDeEvento->getColumnas()) {
-        //                 $result = "se guardo el segundo if fila: ". $fila . " columna: " . $columna;
-        //                 return $this->responseHelper->responseMessage($result);
-        //             }  */                    
-        //         }
-                
-        //         // $celda->getFila($fila);
-        //         // $celda->getColumna($columna);
-        //         // $celda->setSalaDeEventos($salaDeEvento);
-        //         // $celdaRepository->save($celda,true);
-        //     }
-        // }
+                 $celda = new Celda();
+                 //$celda->setFila(3+$columna-1);
+                 //$celda->setColumna(1+$columna-1);
+                 for ($i=0; $i < count($parametrosarray["celdas"]); $i++) { 
+                    if (($parametrosarray["celdas"][$i]["fila"] == $celdas[$fila-1]->getFila()) && 
+                   ($parametrosarray["celdas"][0]["columna"] == $celdas[$columna-1]->getColumna())){
+                     $celda->setSalaDeEventos($salaDeEvento);
+                     $celda->setCantidadButacas($fila);
+                     $celda->setCategoriaButaca($categoriaButaca);
+                     $celdaRepository->save($celda,true);
+                     $result = "celdas guardadas";
+                 }
+                 
+                 // $celda->getFila($fila);
+                 // $celda->getColumna($columna);
+                 // $celda->setSalaDeEventos($salaDeEvento);
+                 // $celdaRepository->save($celda,true);
+             }
+             //$result = "celdas guardadas";
+         }
         /*$array= array();
         for ($i=0; $i < count($celdas); $i++) { 
             $array[] = $celdas[$i]->getCantidadButacas();
 
         }*/
-        return $this->responseHelper->responseMessage($celdas);
-    }
 
+        return $this->responseHelper->responseMessage($result);
+    }
+}
 
     #[Route('/{id}/edit', name: 'app_celda_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Celda $celda, CeldaRepository $celdaRepository): Response

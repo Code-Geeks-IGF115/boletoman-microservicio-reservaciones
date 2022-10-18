@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\{SalaDeEventos,Celda};
 use App\Form\SalaDeEventosType;
+use App\Repository\CategoriaButacaRepository;
 use App\Repository\CeldaRepository;
 use App\Repository\SalaDeEventosRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -90,10 +91,14 @@ class SalaDeEventosController extends AbstractController
      * Revisión: Andrea Melissa Monterrosa Morales
      */
     #[Route('/{id}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
-    public function show(SalaDeEventos $salaDeEvento): JsonResponse
+    public function show(SalaDeEventos $salaDeEvento, CeldaRepository $celdaRepository,
+    CategoriaButacaRepository $categoriaButacaRepository, Celda $celda): JsonResponse
     {
+        
+        $celdas=$celdaRepository->findBy(['categoriaButaca'=>$celda->categoriaButaca]);
         try{
-            return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento']);
+            return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento'],
+            ['\nceldas:' => $celdas]);
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos("No se encontraron datos.");
         }
