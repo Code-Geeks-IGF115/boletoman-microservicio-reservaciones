@@ -30,7 +30,7 @@ class SalaDeEventos
     private ?string $telefono = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['ver_evento','ver_categoria'],'ver_salas_de_eventos')]
+    #[Groups(['ver_evento','ver_categoria','ver_salas_de_eventos'])]
     private ?string $email = null;
 
     #[ORM\Column]
