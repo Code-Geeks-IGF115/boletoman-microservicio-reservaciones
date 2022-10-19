@@ -92,11 +92,12 @@ class CeldaController extends AbstractController
                 // y si son iguales entonces actualizar(update) 
                 //la celda (cantidad butacas y asignar categoriaButaca)y 
                 // guardarla en la base de datos
-                $celda = new Celda();
+                
                 for ($i = 0; $i < count($parametrosarray["celdas"]); $i++) {
                     if (($parametrosarray["celdas"][$i]["fila"] == $celdas[$fila - 1]->getFila()) &&
                         ($parametrosarray["celdas"][$i]["columna"] == $celdas[$columna - 1]->getColumna())
                     ) {
+                        $celda = new Celda();
                         $celda->setSalaDeEventos($salaDeEvento);
                         $celda->setCantidadButacas($fila);
                         $celda->setCategoriaButaca($categoriaButaca);

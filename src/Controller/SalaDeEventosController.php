@@ -94,17 +94,23 @@ class SalaDeEventosController extends AbstractController
      * Revisión: Andrea Melissa Monterrosa Morales
      */
     #[Route('/{id}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
-    public function show(SalaDeEventos $salaDeEvento, CeldaRepository $celdaRepository,
-    CategoriaButacaRepository $categoriaButacaRepository, Celda $celda): JsonResponse
+    public function show($id,
+    SalaDeEventosRepository $salaDeEventosRepository, CeldaRepository $celdaRepository): JsonResponse
     {
+        //$categoriaButaca = $categoriaButacaRepository->findBy(['salaDeEventos' => $salaDeEvento]);
+        //if ($categoriaButaca == null) { //verifica si el id ingresado existe 
+        //}
+        //$salaDeEvento = $salaDeEventosRepository->find($id);
+        $celdas=$celdaRepository->find($id);
+        //$salaDeEvento->addCelda($celdas[0]);
         
-        $celdas=$celdaRepository->findBy(['categoriaButaca'=>$celda->categoriaButaca]);
         try{
-            return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento'],
-            ['\nceldas:' => $celdas]);
+            return $this->responseHelper->responseDatos(['salaDeEvento'=>$celdas],['ver_evento']);
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos("No se encontraron datos.");
         }
+       
+        
     }
     
     
