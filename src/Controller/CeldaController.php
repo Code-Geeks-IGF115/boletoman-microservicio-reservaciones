@@ -81,32 +81,43 @@ class CeldaController extends AbstractController
         $celdas = $celdaRepository->findBy(['categoriaButaca' => $categoriaButaca]);
         //var_dump($celdas);
         //almacenando json request en array para comparar
+        $parametrosarray = [];
         if ($request->getContent()) {
             $parametrosarray = json_decode($request->getContent(), true);
         }
+        $result = "no se logro";
         //crear celdas
-        for ($fila = 1; $fila <= $salaDeEvento->getFilas(); $fila++) {
-            for ($columna = 1; $columna <= $salaDeEvento->getColumnas(); $columna++) {
-                //recorrer las celdas del request y las celdas de la base de datos en
-                //simultaneo y comparar los atributos de fila y columna
-                // y si son iguales entonces actualizar(update) 
-                //la celda (cantidad butacas y asignar categoriaButaca)y 
-                // guardarla en la base de datos
-                
-                for ($i = 0; $i < count($parametrosarray["celdas"]); $i++) {
-                    if (($parametrosarray["celdas"][$i]["fila"] == $celdas[$fila - 1]->getFila()) &&
-                        ($parametrosarray["celdas"][$i]["columna"] == $celdas[$columna - 1]->getColumna())
-                    ) {
-                        $celda = new Celda();
-                        $celda->setSalaDeEventos($salaDeEvento);
-                        $celda->setCantidadButacas($fila);
-                        $celda->setCategoriaButaca($categoriaButaca);
-                        $celdaRepository->save($celda, true);
+        if($celdas == 0){
+            return $this->responseHelper->responseDatos("No existe las celdas que busca");
+        }
+        else{
+            for ($fila = 1; $fila <= $salaDeEvento->getFilas(); $fila++) {
+                for ($columna = 1; $columna <= $salaDeEvento->getColumnas(); $columna++) {
+                    //recorrer las celdas del request y las celdas de la base de datos en
+                    //simultaneo y comparar los atributos de fila y columna
+                    // y si son iguales entonces actualizar(update) 
+                    //la celda (cantidad butacas y asignar categoriaButaca)y 
+                    // guardarla en la base de datos
+                    
+                    for ($i = 0; $i < count($parametrosarray["celdas"]); $i++) {
+                        if (($parametrosarray["celdas"][$i]["fila"] == $celdas[$fila]->getFila()) &&
+                            ($parametrosarray["celdas"][$i]["columna"] == $celdas[$columna]->getColumna())
+                        ) {
+                            $celda = new Celda();
+                            $celda->setSalaDeEventos($salaDeEvento);
+                            $celda->setCantidadButacas($fila);
+                            $celda->setCategoriaButaca($categoriaButaca);
+                            $celdaRepository->save($celda, true);
+                            $result = "si se logro";
+                        }
                     }
                 }
+                
             }
-            return $this->responseHelper->responseDatos(['celdasCreadas' => count($parametrosarray["celdas"])]);
         }
+        
+        return $this->responseHelper->responseDatos(count($celdas));
+        
     }
 
     #[Route('/{id}/edit', name: 'app_celda_edit', methods: ['GET', 'POST'])]

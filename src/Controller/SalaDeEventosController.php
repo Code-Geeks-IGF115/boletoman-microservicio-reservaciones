@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\{SalaDeEventos,Celda};
+use App\Entity\{CategoriaButaca, SalaDeEventos,Celda};
 use App\Form\SalaDeEventosType;
 use App\Repository\CategoriaButacaRepository;
 use App\Repository\CeldaRepository;
@@ -94,18 +94,18 @@ class SalaDeEventosController extends AbstractController
      * Revisión: Andrea Melissa Monterrosa Morales
      */
     #[Route('/{id}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
-    public function show($id,
-    SalaDeEventosRepository $salaDeEventosRepository, CeldaRepository $celdaRepository): JsonResponse
+    public function show(SalaDeEventos $salaDeEvento,$id, SalaDeEventosRepository $salaDeEventosRepository
+    , CeldaRepository $celdaRepository, CategoriaButacaRepository $categoriaButacaRepository): JsonResponse
     {
-        //$categoriaButaca = $categoriaButacaRepository->findBy(['salaDeEventos' => $salaDeEvento]);
+        $categoriaButaca = $categoriaButacaRepository->findBy(['salaDeEventos' => $salaDeEvento]);
         //if ($categoriaButaca == null) { //verifica si el id ingresado existe 
         //}
         //$salaDeEvento = $salaDeEventosRepository->find($id);
-        $celdas=$celdaRepository->find($id);
+        $celdas = $celdaRepository->findBy(['categoriaButaca' => $categoriaButaca]);
         //$salaDeEvento->addCelda($celdas[0]);
         
         try{
-            return $this->responseHelper->responseDatos(['salaDeEvento'=>$celdas],['ver_evento']);
+            return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento']);
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos("No se encontraron datos.");
         }
