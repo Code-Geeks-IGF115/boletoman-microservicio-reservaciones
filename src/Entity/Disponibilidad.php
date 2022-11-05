@@ -22,6 +22,10 @@ class Disponibilidad
     #[ORM\Column]
     private ?int $idDetalleCompra = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Butaca $butaca = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +63,18 @@ class Disponibilidad
     public function setIdDetalleCompra(int $idDetalleCompra): self
     {
         $this->idDetalleCompra = $idDetalleCompra;
+
+        return $this;
+    }
+
+    public function getButaca(): ?Butaca
+    {
+        return $this->butaca;
+    }
+
+    public function setButaca(?Butaca $butaca): self
+    {
+        $this->butaca = $butaca;
 
         return $this;
     }
