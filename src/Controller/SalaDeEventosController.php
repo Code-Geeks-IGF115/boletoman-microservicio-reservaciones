@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\{SalaDeEventos,Celda};
+use App\Entity\{CategoriaButaca, SalaDeEventos,Celda};
 use App\Form\SalaDeEventosType;
 use App\Repository\CategoriaButacaRepository;
 use App\Repository\CeldaRepository;
@@ -93,6 +93,7 @@ class SalaDeEventosController extends AbstractController
      * Revisión: Andrea Melissa Monterrosa Morales
      */
     #[Route('/{id}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
+
     public function show(
         SalaDeEventos $salaDeEvento = null): JsonResponse
     {
