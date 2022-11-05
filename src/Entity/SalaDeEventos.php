@@ -14,23 +14,23 @@ class SalaDeEventos
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['ver_evento','ver_categoria'])]
+    #[Groups(['ver_evento','ver_categoria','ver_salas_de_eventos'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['ver_evento','ver_categoria'])]
+    #[Groups(['ver_evento','ver_categoria','ver_salas_de_eventos'])]
     private ?string $nombre = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['ver_evento','ver_categoria'])]
+    #[Groups(['ver_evento','ver_categoria','ver_salas_de_eventos'])]
     private ?string $direccion = null;
 
     #[ORM\Column(length: 9)]
-    #[Groups(['ver_evento','ver_categoria'])]
+    #[Groups(['ver_evento','ver_categoria','ver_salas_de_eventos'])]
     private ?string $telefono = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['ver_evento','ver_categoria'])]
+    #[Groups(['ver_evento','ver_categoria','ver_salas_de_eventos'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -50,7 +50,7 @@ class SalaDeEventos
     private Collection $categoriaButacas;
 
     #[ORM\OneToMany(mappedBy: 'salaDeEventos', targetEntity: Celda::class, orphanRemoval: true)]
-    #[Groups(['ver_evento'])]
+    // #[Groups(['ver_evento'])]
     private Collection $celdas;
 
     public function __construct()

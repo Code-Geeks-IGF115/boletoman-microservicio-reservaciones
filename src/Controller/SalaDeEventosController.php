@@ -35,7 +35,7 @@ class SalaDeEventosController extends AbstractController
     public function index(SalaDeEventosRepository $salaDeEventosRepository): JsonResponse
     {
         $salaDeEvento=$salaDeEventosRepository->findAll();
-        return $this->responseHelper->responseDatos(['salas'=>$salaDeEvento],['ver_evento']);
+        return $this->responseHelper->responseDatos(['salas'=>$salaDeEvento],['ver_salas_de_eventos']);
     }
 
       /** Tarea: Función crearSalaDeEventos
@@ -51,8 +51,7 @@ class SalaDeEventosController extends AbstractController
     SalaDeEventosRepository $salaDeEventosRepository,
     CeldaRepository $celdaRepository): JsonResponse
     {  
-        // recuperando frecuencias   
-        $parametros=$request->request->all(); 
+        $parametros=$request->toArray(); 
         $request->request->replace(["sala_de_eventos"=>$parametros]);
         $salaDeEvento = new SalaDeEventos();
         $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
@@ -94,23 +93,15 @@ class SalaDeEventosController extends AbstractController
      * Revisión: Andrea Melissa Monterrosa Morales
      */
     #[Route('/{id}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
-    public function show(SalaDeEventos $salaDeEvento,$id, SalaDeEventosRepository $salaDeEventosRepository
-    , CeldaRepository $celdaRepository, CategoriaButacaRepository $categoriaButacaRepository): JsonResponse
+
+    public function show(
+        SalaDeEventos $salaDeEvento = null): JsonResponse
     {
-        $categoriaButaca = $categoriaButacaRepository->findBy(['salaDeEventos' => $salaDeEvento]);
-        //if ($categoriaButaca == null) { //verifica si el id ingresado existe 
-        //}
-        //$salaDeEvento = $salaDeEventosRepository->find($id);
-        $celdas = $celdaRepository->findBy(['categoriaButaca' => $categoriaButaca]);
-        //$salaDeEvento->addCelda($celdas[0]);
-        
-        try{
+        if(!$salaDeEvento){
+            return $this->responseHelper->responseMessage("Sala de eventos existe.");
+        }else{
             return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento']);
-        }catch(Exception $e){
-            return $this->responseHelper->responseDatosNoValidos("No se encontraron datos.");
-        }
-       
-        
+        }        
     }
     
     
@@ -131,8 +122,8 @@ class SalaDeEventosController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos(); 
         }
         else{
-            // recuperando frecuencias   
-            $parametros=$request->request->all(); 
+ 
+            $parametros=$request->toArray(); 
             $request->request->replace(["sala_de_eventos"=>$parametros]);
             $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
             $form->handleRequest($request);
@@ -142,7 +133,7 @@ class SalaDeEventosController extends AbstractController
                 return $this->responseHelper->responseMessage("Sala de Eventos se modificó con exito.");
             }
             else{
-                return $this->responseHelper->responseMessage("Sala de Eventos se modificó con exito.");
+                return $this->responseHelper->responseDatosNoValidos();
             }
         } 
     }

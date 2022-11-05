@@ -27,7 +27,8 @@
 				"xdebug.php-pack",
 				"mrmlnc.vscode-apache",
 				"rangav.vscode-thunder-client",
-				"PKief.material-product-icons"
+				"PKief.material-product-icons",
+				"donjayamanne.githistory"
 			]
 		}
 	},
