@@ -53,7 +53,7 @@ class CeldaController extends AbstractController
             'celda' => $celda,
             'form' => $form,
         ]);
-    }
+    }*/
 
     #[Route('/{id}', name: 'app_celda_show', methods: ['GET'])]
     public function show(Celda $celda): Response
@@ -61,7 +61,7 @@ class CeldaController extends AbstractController
         return $this->render('celda/show.html.twig', [
             'celda' => $celda,
         ]);
-    }*/
+    }
 
     #[Route('/{idCategoria}/new', name: 'app_celda_new', methods: ['POST'])]
     public function new(
