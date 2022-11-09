@@ -113,7 +113,7 @@ class SalaDeEventosController extends AbstractController
             $butaca = $butacaRepository->findAll();
             foreach ($salaDeEvento->getCategoriaButacas() as $key => $value) {
                 $disponibilidad = new Disponibilidad();
-                $disponibilidad->setButaca($butaca[0]);
+                $disponibilidad->setButaca($butaca[$key]);
                 $disponibilidad->setDisponible($opcion[0]);
                 $disponibilidad->setIdEvento($idEvento);
                 $disponibilidad->setIdDetalleCompra($idDetalleCompra);
