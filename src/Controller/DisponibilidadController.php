@@ -75,4 +75,10 @@ class DisponibilidadController extends AbstractController
 
         return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('desbloquearButacas', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
+    public function desbloquearButaca(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
+    {
+        return new Response('Hello ', Response::HTTP_OK);
+    }
 }
