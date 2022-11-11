@@ -63,8 +63,8 @@ class CeldaController extends AbstractController
         ]);
     }
 
-    #[Route('/{idCategoria}/new', name: 'app_celda_new', methods: ['POST'])]
-    public function new(
+    #[Route('/{idCategoria}/new', name: 'asignar_categoria_a_celda', methods: ['POST'])]
+    public function asignarCategoriaACeldas(
         Request $request,
         CategoriaButacaRepository $categoriaButacaRepository,
         CeldaRepository $celdaRepository,
@@ -78,20 +78,19 @@ class CeldaController extends AbstractController
         $salaDeEvento = $categoriaButaca->getSalaDeEventos();
 
         //recuperar todas las celdas de esta sala de eventos
-        $celdas = $celdaRepository->findBy(['categoriaButaca' => $categoriaButaca]);
+        /*$celdas = $celdaRepository->findBy(['categoriaButaca' => $categoriaButaca]);
         //var_dump($celdas);
-        //almacenando json request en array para comparar
-        $parametrosarray = [];
+        //almacenando json request en array para comparar*/
+        $celdas = [];
         if ($request->getContent()) {
-            $parametrosarray = json_decode($request->getContent(), true);
+            $celdas = json_decode($request->getContent(), true);
         }
-        $result = "no se logro";
         //crear celdas
-        if($celdas == 0){
+        /*if($celdas == 0){
             return $this->responseHelper->responseDatos("No existe las celdas que busca");
-        }
-       /*else{
-            for ($fila = 1; $fila <= $salaDeEvento->getFilas(); $fila++) {
+        }*/
+       
+            /*for ($fila = 1; $fila <= $salaDeEvento->getFilas(); $fila++) {
                 for ($columna = 1; $columna <= $salaDeEvento->getColumnas(); $columna++) {
                     //recorrer las celdas del request y las celdas de la base de datos en
                     //simultaneo y comparar los atributos de fila y columna
@@ -113,10 +112,37 @@ class CeldaController extends AbstractController
                     }
                 }
                 
+            }*/
+            $contadorCeldasCreadas = 0;//para celdas creadas
+            $contadorCeldasModificadas =0;
+            $result = "celdas no creadas";
+            foreach ($celdas["celdas"] as $key => $celda) {
+                $consulta = $celdaRepository->findOneBy(['salaDeEventos' => $salaDeEvento, 
+                'fila' => $celda["fila"], 'columna' => $celda["columna"]]);
+                if($consulta == null){
+                   // dd($consulta);
+
+                    $creacion = new Celda();
+                    $creacion->setSalaDeEventos($salaDeEvento);
+                    $creacion->setFila($celda["fila"]);
+                    $creacion->setColumna($celda["columna"]);
+                    $creacion->setCantidadButacas($celda["cantidadButacas"]);
+                    $creacion->setCategoriaButaca($categoriaButaca);
+                    $celdaRepository->save($creacion, true);
+                    $contadorCeldasCreadas++;
+                    
+                }
+                else{
+                    $consulta->setCantidadButacas($celda["cantidadButacas"]);
+                    $consulta->setCategoriaButaca($categoriaButaca);
+                    $celdaRepository->save($consulta, true);
+                    $contadorCeldasModificadas++;
+                }
             }
-        }*/
         
-        return $this->responseHelper->responseDatos("");
+        return $this->responseHelper->responsedatos(['message' =>"celdas creadas : " . strval($contadorCeldasCreadas).
+    " celdas modificadas: " . strval($contadorCeldasModificadas), 'celdasCreadas' => $contadorCeldasCreadas,
+    'celdasModificadas' => $contadorCeldasModificadas]);
         
     }
 

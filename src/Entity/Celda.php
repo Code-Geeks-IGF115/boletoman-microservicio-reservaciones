@@ -24,10 +24,7 @@ class Celda
     #[Groups(['ver_sala_de_eventos'])]
     private ?int $columna = null;
 
-    #[ORM\Column]
-    private ?int $cantidadMesas = 0;
-
-
+    
     #[ORM\Column]
     #[Groups(['ver_sala_de_eventos'])]
     private ?int $cantidadButacas = 0;
@@ -78,17 +75,6 @@ class Celda
         return $this;
     }
 
-    public function getCantidadMesas(): ?int
-    {
-        return $this->cantidadMesas;
-    }
-
-    public function setCantidadMesas(int $cantidadMesas): self
-    {
-        $this->cantidadMesas = $cantidadMesas;
-
-        return $this;
-    }
 
     public function getCantidadButacas(): ?int
     {
