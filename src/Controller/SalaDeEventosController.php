@@ -112,12 +112,12 @@ class SalaDeEventosController extends AbstractController
             //$celdas = $celdaRepository->findBy(['categoriaButaca' => $salaDeEvento->getCategoriaButacas()[0]->getId()]);
             $butaca = $butacaRepository->findAll();
             foreach ($salaDeEvento->getCategoriaButacas() as $key => $value) {
-                $disponibilidad = new Disponibilidad();
+                /*$disponibilidad = new Disponibilidad();
                 $disponibilidad->setButaca($butaca[$key]);
                 $disponibilidad->setDisponible($opcion[0]);
                 $disponibilidad->setIdEvento($idEvento);
                 $disponibilidad->setIdDetalleCompra($idDetalleCompra);
-                $disponibilidadRepository->save($disponibilidad, true);
+                $disponibilidadRepository->save($disponibilidad, true);*/
                 $celdas = $celdaRepository->findBy(['categoriaButaca' => $salaDeEvento->getCategoriaButacas()[$key]->getId()]);
                 foreach ($celdas as $key => $value) {
                     $salaDeEvento->addCelda($celdas[$key]);
@@ -126,8 +126,8 @@ class SalaDeEventosController extends AbstractController
             
             
 
-            return $this->responseHelper->responseDatos([['salaDeEvento'=>
-            $salaDeEvento], ['Disponibilidad' => "Disponibilidad Creadas"]], ['ver_evento']);
+            return $this->responseHelper->responseDatos(['salaDeEvento'=>
+            $salaDeEvento], ['ver_sala_de_eventos']);
         }        
     }
     

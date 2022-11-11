@@ -90,7 +90,7 @@ class CeldaController extends AbstractController
         if($celdas == 0){
             return $this->responseHelper->responseDatos("No existe las celdas que busca");
         }
-        else{
+       /*else{
             for ($fila = 1; $fila <= $salaDeEvento->getFilas(); $fila++) {
                 for ($columna = 1; $columna <= $salaDeEvento->getColumnas(); $columna++) {
                     //recorrer las celdas del request y las celdas de la base de datos en
@@ -99,9 +99,9 @@ class CeldaController extends AbstractController
                     //la celda (cantidad butacas y asignar categoriaButaca)y 
                     // guardarla en la base de datos
                     
-                    for ($i = 0; $i < count($parametrosarray["celdas"]); $i++) {
-                        if (($parametrosarray["celdas"][$i]["fila"] == $celdas[$fila]->getFila()) &&
-                            ($parametrosarray["celdas"][$i]["columna"] == $celdas[$columna]->getColumna())
+                    for ($i = 0; $i < count($parametrosarray); $i++) {
+                        if (($parametrosarray[$i]["fila"] == $celdas[$fila]->getFila()) &&
+                            ($parametrosarray[$i]["columna"] == $celdas[$columna]->getColumna())
                         ) {
                             $celda = new Celda();
                             $celda->setSalaDeEventos($salaDeEvento);
@@ -114,9 +114,9 @@ class CeldaController extends AbstractController
                 }
                 
             }
-        }
+        }*/
         
-        return $this->responseHelper->responseDatos(count($celdas));
+        return $this->responseHelper->responseDatos("");
         
     }
 

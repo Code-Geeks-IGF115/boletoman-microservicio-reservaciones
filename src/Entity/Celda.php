@@ -6,6 +6,7 @@ use App\Repository\CeldaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CeldaRepository::class)]
 class Celda
@@ -16,21 +17,27 @@ class Celda
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['ver_sala_de_eventos'])]
     private ?int $fila = null;
 
     #[ORM\Column]
+    #[Groups(['ver_sala_de_eventos'])]
     private ?int $columna = null;
 
     #[ORM\Column]
     private ?int $cantidadMesas = 0;
 
+
     #[ORM\Column]
+    #[Groups(['ver_sala_de_eventos'])]
     private ?int $cantidadButacas = 0;
 
     #[ORM\ManyToOne(inversedBy: 'celdas')]
+    #[Groups(['ver_sala_de_eventos'])]
     private ?CategoriaButaca $categoriaButaca = null;
 
     #[ORM\OneToMany(mappedBy: 'celda', targetEntity: Butaca::class, orphanRemoval: true)]
+    //#[Groups(['ver_sala_de_eventos'])]
     private Collection $butacas;
 
     #[ORM\ManyToOne(inversedBy: 'celdas')]

@@ -50,7 +50,7 @@ class SalaDeEventos
     private Collection $categoriaButacas;
 
     #[ORM\OneToMany(mappedBy: 'salaDeEventos', targetEntity: Celda::class, orphanRemoval: true)]
-     //#[Groups(['ver_evento'])]
+    #[Groups(['ver_sala_de_eventos'])]
     private Collection $celdas;
 
     public function __construct()
