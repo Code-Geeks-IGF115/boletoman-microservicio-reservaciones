@@ -76,9 +76,20 @@ class DisponibilidadController extends AbstractController
         return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('desbloquearButacas', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
-    public function desbloquearButaca(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
+    #[Route('/desbloquearbutacas', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
+    public function desbloquearbutaca(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
     {
-        return new Response('Hello ', Response::HTTP_OK);
+        $disp=$disponibilidadRepository;
+        $parametro = Array($request);
+        $longitud=count($parametro);
+        for($contador=0;$contador<$longitud;$contador++){
+            if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()!='Bloqueado'){
+                return new Response('F', Response::HTTP_PRECONDITION_FAILED);
+            }
+            if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()=='Bloqueado'){
+                $disp->setDisponible('Disponible');
+                return new Response('GG', Response::HTTP_OK);
+            }
+        }
     }
 }
