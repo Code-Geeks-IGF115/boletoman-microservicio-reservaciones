@@ -20,6 +20,7 @@ class Disponibilidad
     private ?int $idEvento = null;
 
     #[ORM\Column]
+    #[ORM\JoinColumn(nullable: true)]
     private ?int $idDetalleCompra = null;
 
     #[ORM\ManyToOne]

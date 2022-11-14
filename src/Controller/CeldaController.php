@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Butaca;
 use App\Entity\CategoriaButaca;
 use App\Entity\Celda;
+use App\Entity\Disponibilidad;
 use App\Form\CeldaType;
+use App\Repository\ButacaRepository;
 use App\Repository\CeldaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use App\Repository\CategoriaButacaRepository;
+use App\Repository\DisponibilidadRepository;
 use App\Service\ResponseHelper;
 use Exception;
 use Nelmio\CorsBundle;
@@ -63,13 +67,12 @@ class CeldaController extends AbstractController
         ]);
     }
 
-    #[Route('/{idCategoria}/new', name: 'asignar_categoria_a_celda', methods: ['POST'])]
+    #[Route('/{idCategoria}/{idSalaDeEventos}/{idEvento}/new', name: 'asignar_categoria_a_celda', methods: ['POST'])]
     public function asignarCategoriaACeldas(
-        Request $request,
-        CategoriaButacaRepository $categoriaButacaRepository,
-        CeldaRepository $celdaRepository,
-        $idCategoria
-    ): JsonResponse {
+        Request $request, CategoriaButacaRepository $categoriaButacaRepository,
+        CeldaRepository $celdaRepository, ButacaRepository $butacaRepository, 
+        $idCategoria, $idSalaDeEventos, $idEvento, 
+        DisponibilidadRepository $disponibilidadRepository): JsonResponse {
         //recuperando la categoria butaca
         $categoriaButaca = $categoriaButacaRepository->find($idCategoria);
         if ($categoriaButaca == null) { //verifica si el id ingresado existe 
@@ -85,65 +88,65 @@ class CeldaController extends AbstractController
         if ($request->getContent()) {
             $celdas = json_decode($request->getContent(), true);
         }
-        //crear celdas
-        /*if($celdas == 0){
-            return $this->responseHelper->responseDatos("No existe las celdas que busca");
-        }*/
-       
-            /*for ($fila = 1; $fila <= $salaDeEvento->getFilas(); $fila++) {
-                for ($columna = 1; $columna <= $salaDeEvento->getColumnas(); $columna++) {
-                    //recorrer las celdas del request y las celdas de la base de datos en
-                    //simultaneo y comparar los atributos de fila y columna
-                    // y si son iguales entonces actualizar(update) 
-                    //la celda (cantidad butacas y asignar categoriaButaca)y 
-                    // guardarla en la base de datos
-                    
-                    for ($i = 0; $i < count($parametrosarray); $i++) {
-                        if (($parametrosarray[$i]["fila"] == $celdas[$fila]->getFila()) &&
-                            ($parametrosarray[$i]["columna"] == $celdas[$columna]->getColumna())
-                        ) {
-                            $celda = new Celda();
-                            $celda->setSalaDeEventos($salaDeEvento);
-                            $celda->setCantidadButacas($fila);
-                            $celda->setCategoriaButaca($categoriaButaca);
-                            $celdaRepository->save($celda, true);
-                            $result = "si se logro";
-                        }
+        
+            $opcion = ["Disponible", "Bloqueado"];//estados de disponibilidad
+            $contadorCeldasModificadas =0;
+            
+            //$result = "celdas no creadas";
+            //$consultaDisponibilidad = $disponibilidadRepository->findBy(['idEvento' => $idEvento]);
+
+            $consultaButacas = $butacaRepository->findBy(['disponible' => $opcion[0]], );
+            $contadorButacas = 0;
+            foreach ($consultaButacas as $key => $value) {
+                $consultaDisponibilidad = $disponibilidadRepository->findOneBy(['butaca' => $consultaButacas[$key]]);
+                if ($consultaDisponibilidad != null){//verifica si la consulta existe
+                    if ($consultaDisponibilidad->getIdEvento() == null ) {
+                        //sino tiene ningun evento(null), se elimina la disponibilidad y la butaca                     
+                        $disponibilidadRepository->remove($consultaDisponibilidad, true);
+                        $butacaRepository->remove($consultaButacas[$key], true);
+                    }
+                    elseif ($consultaDisponibilidad->getIdEvento() == $idEvento) {
+                        //si existen butacas a este evento, se resta de la cantidad que se va crear
+                        $contadorButacas ++;
                     }
                 }
-                
-            }*/
-            $contadorCeldasCreadas = 0;//para celdas creadas
-            $contadorCeldasModificadas =0;
-            $result = "celdas no creadas";
-            foreach ($celdas["celdas"] as $key => $celda) {
-                $consulta = $celdaRepository->findOneBy(['salaDeEventos' => $salaDeEvento, 
-                'fila' => $celda["fila"], 'columna' => $celda["columna"]]);
-                if($consulta == null){
-                   // dd($consulta);
+            }
 
-                    $creacion = new Celda();
-                    $creacion->setSalaDeEventos($salaDeEvento);
-                    $creacion->setFila($celda["fila"]);
-                    $creacion->setColumna($celda["columna"]);
-                    $creacion->setCantidadButacas($celda["cantidadButacas"]);
-                    $creacion->setCategoriaButaca($categoriaButaca);
-                    $celdaRepository->save($creacion, true);
-                    $contadorCeldasCreadas++;
+            foreach ($celdas["celdas"] as $key => $celda) {
+                $consultaCelda = $celdaRepository->findOneBy(['salaDeEventos' => $salaDeEvento, 
+                'fila' => $celda["fila"], 'columna' => $celda["columna"]]);
+
+                    $butacasACrear = $celda["cantidadButacas"] - $contadorButacas;
                     
-                }
-                else{
-                    $consulta->setCantidadButacas($celda["cantidadButacas"]);
-                    $consulta->setCategoriaButaca($categoriaButaca);
-                    $celdaRepository->save($consulta, true);
-                    $contadorCeldasModificadas++;
-                }
+                    $consultaCelda->setCantidadButacas($celda["cantidadButacas"]);
+                    $consultaCelda->setCategoriaButaca($categoriaButaca);
+
+                    
+                    //crear disponibilidades y butacas
+                    for ($i=0+3; $i < $butacasACrear+3; $i++) { 
+                        $newButaca = new Butaca();
+                        $newButaca->setCodigoButaca(strval($i.":".$categoriaButaca->getCodigo()));
+                        $newButaca->setDisponible($opcion[0]);
+                        $newButaca->setCelda($consultaCelda);
+
+                        $newDisponibilidad = new Disponibilidad();
+                        $newDisponibilidad->setButaca($newButaca);
+                        $newDisponibilidad->setDisponible($newButaca->getDisponible());
+                        $newDisponibilidad->setIdEvento($idEvento);
+
+                        $butacaRepository->save($newButaca, true);
+                        $disponibilidadRepository->save($newDisponibilidad, true);
+                        
+                    }
+                $celdaRepository->save($consultaCelda, true);
+                $contadorCeldasModificadas++;
+                  
+                
             }
         
-        return $this->responseHelper->responsedatos(['message' =>"celdas creadas : " . strval($contadorCeldasCreadas).
-    " celdas modificadas: " . strval($contadorCeldasModificadas), 'celdasCreadas' => $contadorCeldasCreadas,
+        return $this->responseHelper->responsedatos(['message' =>"celdas modificadas: " . strval($contadorCeldasModificadas),
     'celdasModificadas' => $contadorCeldasModificadas]);
-        
+    //return $this->responseHelper->responsedatos(['cantidad' => $contadorButacas]);
     }
 
     #[Route('/{id}/edit', name: 'app_celda_edit', methods: ['GET', 'POST'])]
