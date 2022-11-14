@@ -70,7 +70,7 @@ class SalaDeEventosController extends AbstractController
                         $celda->setFila($fila);
                         $celda->setColumna($columna);
                         $celda->setSalaDeEventos($salaDeEvento);
-                        //$salaDeEvento->addCelda($celda);
+                        $salaDeEvento->addCelda($celda);
                         $celdaRepository->save($celda,true);
                         
                     }
@@ -97,35 +97,22 @@ class SalaDeEventosController extends AbstractController
      * Fecha de Aprobación: 10/10/2022
      * Revisión: Andrea Melissa Monterrosa Morales
      */
-    #[Route('/{idSalaDeEventos}/{idEvento}/{idDetalleCompra}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
-    public function show(SalaDeEventos $salaDeEvento = null, ButacaRepository $butacaRepository,
-    SalaDeEventosRepository $salaDeEventosRepository, $idSalaDeEventos, $idEvento, $idDetalleCompra,
-    DisponibilidadRepository $disponibilidadRepository, CeldaRepository $celdaRepository): JsonResponse
+    #[Route('/{id}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
+    public function show(SalaDeEventos $salaDeEvento = null, 
+    CeldaRepository $celdaRepository): JsonResponse
     {
-        $opcion = ["Desbloqueado", "Bloqueado"];
 
         
-        $salaDeEvento = $salaDeEventosRepository->find($idSalaDeEventos);
+        //$salaDeEvento = $salaDeEventosRepository->find($idSalaDeEventos);
         if(!$salaDeEvento){
             return $this->responseHelper->responseMessage("Sala de eventos no existe.");
         }else{
-            //$celdas = $celdaRepository->findBy(['categoriaButaca' => $salaDeEvento->getCategoriaButacas()[0]->getId()]);
-            $butaca = $butacaRepository->findAll();
             foreach ($salaDeEvento->getCategoriaButacas() as $key => $value) {
-                /*$disponibilidad = new Disponibilidad();
-                $disponibilidad->setButaca($butaca[$key]);
-                $disponibilidad->setDisponible($opcion[0]);
-                $disponibilidad->setIdEvento($idEvento);
-                $disponibilidad->setIdDetalleCompra($idDetalleCompra);
-                $disponibilidadRepository->save($disponibilidad, true);*/
                 $celdas = $celdaRepository->findBy(['categoriaButaca' => $salaDeEvento->getCategoriaButacas()[$key]->getId()]);
                 foreach ($celdas as $key => $value) {
                     $salaDeEvento->addCelda($celdas[$key]);
                 }
             }
-            
-            
-
             return $this->responseHelper->responseDatos(['salaDeEvento'=>
             $salaDeEvento], ['ver_sala_de_eventos']);
         }        
