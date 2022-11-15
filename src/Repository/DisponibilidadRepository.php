@@ -59,6 +59,8 @@ class DisponibilidadRepository extends ServiceEntityRepository
    /**
     * @return Disponibilidad[] Returns an array of Disponibilidad objects
     * Estado es Disponible, No disponible o Bloqueado
+    * Función que busca disponibilidad por estado, id del Butacas e id del Evento, para bloquear,
+    * desbloquear y comprar butacas
     */
    public function findByEstado($idEvento, $estado, array $idButacas): array
    {
