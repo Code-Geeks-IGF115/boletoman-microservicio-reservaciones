@@ -13,102 +13,104 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/disponibilidad')]
 class DisponibilidadController extends AbstractController
 {
-    #[Route('/', name: 'app_disponibilidad_index', methods: ['GET'])]
-    public function index(DisponibilidadRepository $disponibilidadRepository): Response
+    // #[Route('/', name: 'app_disponibilidad_index', methods: ['GET'])]
+    // public function index(DisponibilidadRepository $disponibilidadRepository): Response
+    // {
+    //     return $this->render('disponibilidad/index.html.twig', [
+    //         'disponibilidads' => $disponibilidadRepository->findAll(),
+    //     ]);
+    // }
+
+    // #[Route('/new', name: 'app_disponibilidad_new', methods: ['GET', 'POST'])]
+    // public function new(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
+    // {
+    //     $disponibilidad = new Disponibilidad();
+    //     $form = $this->createForm(DisponibilidadType::class, $disponibilidad);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $disponibilidadRepository->save($disponibilidad, true);
+
+    //         return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_SEE_OTHER);
+    //     }
+
+    //     return $this->renderForm('disponibilidad/new.html.twig', [
+    //         'disponibilidad' => $disponibilidad,
+    //         'form' => $form,
+    //     ]);
+    // }
+
+    // #[Route('/{id}', name: 'app_disponibilidad_show', methods: ['GET'])]
+    // public function show(Disponibilidad $disponibilidad): Response
+    // {
+    //     return $this->render('disponibilidad/show.html.twig', [
+    //         'disponibilidad' => $disponibilidad,
+    //     ]);
+    // }
+
+    // #[Route('/{id}/edit', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
+    // public function edit(Request $request, Disponibilidad $disponibilidad, DisponibilidadRepository $disponibilidadRepository): Response
+    // {
+    //     $form = $this->createForm(DisponibilidadType::class, $disponibilidad);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $disponibilidadRepository->save($disponibilidad, true);
+
+    //         return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_SEE_OTHER);
+    //     }
+
+    //     return $this->renderForm('disponibilidad/edit.html.twig', [
+    //         'disponibilidad' => $disponibilidad,
+    //         'form' => $form,
+    //     ]);
+    // }
+
+    // #[Route('/{id}', name: 'app_disponibilidad_delete', methods: ['POST'])]
+    // public function delete(Request $request, Disponibilidad $disponibilidad, DisponibilidadRepository $disponibilidadRepository): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete'.$disponibilidad->getId(), $request->request->get('_token'))) {
+    //         $disponibilidadRepository->remove($disponibilidad, true);
+    //     }
+
+    //     return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_SEE_OTHER);
+    // }
+
+    #[Route('/bloquearbutacas', name: 'app_disponibilidad_bloquear_butacas',  methods: ['POST'])]
+    public function bloquearbutacas(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
     {
-        return $this->render('disponibilidad/index.html.twig', [
-            'disponibilidads' => $disponibilidadRepository->findAll(),
-        ]);
-    }
+        $parametros = $request->toArray();
+        foreach ($parametros["butacas"] as $key => $butaca){
+            $estado="Disponible";
+            // $disponibilidad=$disponibilidadRepository->findBy(['idEvento'=>$parametros["idEvento"], 'butaca.id'=>$butaca]);
+            $disponibilidad=$disponibilidadRepository->findByEstado($parametros["idEvento"],$estado);
+            dd($disponibilidad);
+        //   if(->getDisponible()!='Desbloqueado'){
+        //         return new Response('Disponible', Response::HTTP_PRECONDITION_FAILED);
+        //     }
+        //     if($disponibilidadRepository->findOneBy(['id'=>$parametros[$contador]])->getDisponible()=='Bloqueado'){
+        //         $disponibilidadRepository->setDisponible('Bloqueado');
+        //         return new Response('Bloqueado', Response::HTTP_OK);
 
-    #[Route('/new', name: 'app_disponibilidad_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
-    {
-        $disponibilidad = new Disponibilidad();
-        $form = $this->createForm(DisponibilidadType::class, $disponibilidad);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $disponibilidadRepository->save($disponibilidad, true);
-
-            return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('disponibilidad/new.html.twig', [
-            'disponibilidad' => $disponibilidad,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_disponibilidad_show', methods: ['GET'])]
-    public function show(Disponibilidad $disponibilidad): Response
-    {
-        return $this->render('disponibilidad/show.html.twig', [
-            'disponibilidad' => $disponibilidad,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Disponibilidad $disponibilidad, DisponibilidadRepository $disponibilidadRepository): Response
-    {
-        $form = $this->createForm(DisponibilidadType::class, $disponibilidad);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $disponibilidadRepository->save($disponibilidad, true);
-
-            return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('disponibilidad/edit.html.twig', [
-            'disponibilidad' => $disponibilidad,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_disponibilidad_delete', methods: ['POST'])]
-    public function delete(Request $request, Disponibilidad $disponibilidad, DisponibilidadRepository $disponibilidadRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$disponibilidad->getId(), $request->request->get('_token'))) {
-            $disponibilidadRepository->remove($disponibilidad, true);
-        }
-
-        return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/bloquearbutacas', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
-    public function bloquearbutaca(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
-     {
-        $disp=$disponibilidadRepository;
-        $parametro = Array($request);
-        $longitud=count($parametro);
-        for($contador=0;$contador<$longitud;$contador++){
-          if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()!='Desbloqueado'){
-                return new Response('Disponible', Response::HTTP_PRECONDITION_FAILED);
-            }
-            if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()=='Bloqueado'){
-                $disp->setDisponible('Bloqueado');
-                return new Response('Bloqueado', Response::HTTP_OK);
-      
-            }
-        }
-    }
-
-
-    #[Route('/desbloquearbutacas', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
-    public function desbloquearbutaca(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
-        {
-        $disp=$disponibilidadRepository;
-        $parametro = Array($request);
-        $longitud=count($parametro);
-        for($contador=0;$contador<$longitud;$contador++){
-         if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()!='Bloqueado'){
-                return new Response('F', Response::HTTP_PRECONDITION_FAILED);
-            }
-            if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()=='Bloqueado'){
-                $disp->setDisponible('Disponible');
-                return new Response('GG', Response::HTTP_OK);
-            }
+        //     }
         }
     }
+
+
+    // #[Route('/desbloquearbutacas', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
+    // public function desbloquearbutaca(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
+    //     {
+    //     $disp=$disponibilidadRepository;
+    //     $parametro = Array($request);
+    //     $longitud=count($parametro);
+    //     for($contador=0;$contador<$longitud;$contador++){
+    //      if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()!='Bloqueado'){
+    //             return new Response('F', Response::HTTP_PRECONDITION_FAILED);
+    //         }
+    //         if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()=='Bloqueado'){
+    //             $disp->setDisponible('Disponible');
+    //             return new Response('GG', Response::HTTP_OK);
+    //         }
+    //     }
+    // }
 }
