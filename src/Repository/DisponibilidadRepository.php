@@ -43,13 +43,32 @@ class DisponibilidadRepository extends ServiceEntityRepository
     * @return Disponibilidad[] Returns an array of Disponibilidad objects
     * Estado es Disponible, No disponible o Bloqueado
     */
-   public function findByEstado($idEvento, $estado): array
+   public function findByDisponibilidad($idEvento, $estado): array
    {
        return $this->createQueryBuilder('d')
            ->andWhere('d.idEvento = :id_evento')
            ->setParameter('id_evento', $idEvento)
            ->andWhere('d.disponible = :disponible')
            ->setParameter('disponible', $estado)
+           ->orderBy('d.id', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+   /**
+    * @return Disponibilidad[] Returns an array of Disponibilidad objects
+    * Estado es Disponible, No disponible o Bloqueado
+    */
+   public function findByEstado($idEvento, $estado, array $idButacas): array
+   {
+       return $this->createQueryBuilder('d')
+           ->andWhere('d.idEvento = :id_evento')
+           ->setParameter('id_evento', $idEvento)
+           ->andWhere('d.disponible = :disponible')
+           ->setParameter('disponible', $estado)
+           ->andWhere('d.butaca IN (:idButacas)')
+           ->setParameter('idButacas', $idButacas, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
            ->orderBy('d.id', 'ASC')
            ->getQuery()
            ->getResult()

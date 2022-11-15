@@ -79,12 +79,12 @@ class DisponibilidadController extends AbstractController
     #[Route('/bloquearbutacas', name: 'app_disponibilidad_bloquear_butacas',  methods: ['POST'])]
     public function bloquearbutacas(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
     {
+        $estado="Disponible";
         $parametros = $request->toArray();
-        foreach ($parametros["butacas"] as $key => $butaca){
-            $estado="Disponible";
+        $disponibilidad=$disponibilidadRepository->findByEstado($parametros["idEvento"],$estado, $parametros["butacas"]);
+        dd($disponibilidad);
+        // foreach ($parametros["butacas"] as $key => $butaca){
             // $disponibilidad=$disponibilidadRepository->findBy(['idEvento'=>$parametros["idEvento"], 'butaca.id'=>$butaca]);
-            $disponibilidad=$disponibilidadRepository->findByEstado($parametros["idEvento"],$estado);
-            dd($disponibilidad);
         //   if(->getDisponible()!='Desbloqueado'){
         //         return new Response('Disponible', Response::HTTP_PRECONDITION_FAILED);
         //     }
@@ -93,7 +93,7 @@ class DisponibilidadController extends AbstractController
         //         return new Response('Bloqueado', Response::HTTP_OK);
 
         //     }
-        }
+        // }
     }
 
 
