@@ -27,7 +27,7 @@ class CategoriaButaca
     private ?string $precioUnitario = null;
 
     #[ORM\Column(length: 25)]
-    #[Groups(['ver_evento','ver_categoria'])]
+    #[Groups(['ver_evento','ver_categoria', 'ver_sala_de_eventos'])]
     private ?string $nombre = null;
     
     #[ORM\ManyToOne(inversedBy: 'categoriaButacas')]

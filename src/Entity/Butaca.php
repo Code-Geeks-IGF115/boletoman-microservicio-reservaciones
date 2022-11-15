@@ -27,6 +27,7 @@ class Butaca
     private ?Celda $celda = null;
 
     #[ORM\Column]
+    #[ORM\JoinColumn(nullable: true)]
     private ?int $detalle_compra_id = null;
 
     public function getId(): ?int

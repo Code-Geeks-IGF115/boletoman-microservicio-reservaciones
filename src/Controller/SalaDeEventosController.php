@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\{SalaDeEventos,Celda};
+use App\Entity\{CategoriaButaca, SalaDeEventos, Celda, Disponibilidad, Butaca};
 use App\Form\SalaDeEventosType;
+use App\Repository\ButacaRepository;
 use App\Repository\CategoriaButacaRepository;
 use App\Repository\CeldaRepository;
+use App\Repository\DisponibilidadRepository;
 use App\Repository\SalaDeEventosRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,7 @@ use Symfony\Component\HttpFoundation\{Response, JsonResponse};
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Service\ResponseHelper;
+use ContainerE64h0Px\getCeldaService;
 use Exception;
 
 #[Route('/sala/de/eventos')]
@@ -67,7 +70,9 @@ class SalaDeEventosController extends AbstractController
                         $celda->setFila($fila);
                         $celda->setColumna($columna);
                         $celda->setSalaDeEventos($salaDeEvento);
+                        $salaDeEvento->addCelda($celda);
                         $celdaRepository->save($celda,true);
+                        
                     }
                 }
 
@@ -93,13 +98,23 @@ class SalaDeEventosController extends AbstractController
      * Revisión: Andrea Melissa Monterrosa Morales
      */
     #[Route('/{id}', name: 'app_sala_de_eventos_show', methods: ['GET'])]
-    public function show(
-        SalaDeEventos $salaDeEvento = null): JsonResponse
+    public function show(SalaDeEventos $salaDeEvento = null, 
+    CeldaRepository $celdaRepository): JsonResponse
     {
+
+        
+        //$salaDeEvento = $salaDeEventosRepository->find($idSalaDeEventos);
         if(!$salaDeEvento){
-            return $this->responseHelper->responseMessage("Sala de eventos existe.");
+            return $this->responseHelper->responseMessage("Sala de eventos no existe.");
         }else{
-            return $this->responseHelper->responseDatos(['salaDeEvento'=>$salaDeEvento],['ver_evento']);
+            foreach ($salaDeEvento->getCategoriaButacas() as $key => $value) {
+                $celdas = $celdaRepository->findBy(['categoriaButaca' => $salaDeEvento->getCategoriaButacas()[$key]->getId()]);
+                foreach ($celdas as $key => $value) {
+                    $salaDeEvento->addCelda($celdas[$key]);
+                }
+            }
+            return $this->responseHelper->responseDatos(['salaDeEvento'=>
+            $salaDeEvento], ['ver_sala_de_eventos']);
         }        
     }
     
