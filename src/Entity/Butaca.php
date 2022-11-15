@@ -16,19 +16,9 @@ class Butaca
     #[ORM\Column(length: 15)]
     private ?string $codigoButaca = null;
 
-    #[ORM\Column(length: 10)]
-    private ?string $disponible = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $mesa = null;
-
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Celda $celda = null;
-
-    #[ORM\Column]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?int $detalle_compra_id = null;
 
     public function getId(): ?int
     {
@@ -47,30 +37,6 @@ class Butaca
         return $this;
     }
 
-    public function getDisponible(): ?string
-    {
-        return $this->disponible;
-    }
-
-    public function setDisponible(string $disponible): self
-    {
-        $this->disponible = $disponible;
-
-        return $this;
-    }
-
-    public function getMesa(): ?int
-    {
-        return $this->mesa;
-    }
-
-    public function setMesa(?int $mesa): self
-    {
-        $this->mesa = $mesa;
-
-        return $this;
-    }
-
     public function getCelda(): ?Celda
     {
         return $this->celda;
@@ -83,15 +49,4 @@ class Butaca
         return $this;
     }
 
-    public function getDetalleCompraID(): ?int
-    {
-        return $this->detalle_compra_id;
-    }
-
-    public function setDetalleCompraID(?int $detalle_compra_id): self
-    {
-        $this->detalle_compra_id = $detalle_compra_id;
-
-        return $this;
-    }
 }

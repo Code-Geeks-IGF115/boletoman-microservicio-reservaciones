@@ -123,15 +123,14 @@ class CeldaController extends AbstractController
 
                     
                     //crear disponibilidades y butacas
-                    for ($i=0+3; $i < $butacasACrear+3; $i++) { 
+                    /*for ($i=0+3; $i < $butacasACrear+3; $i++) { 
                         $newButaca = new Butaca();
                         $newButaca->setCodigoButaca(strval($i.":".$categoriaButaca->getCodigo()));
-                        $newButaca->setDisponible($opcion[0]);
                         $newButaca->setCelda($consultaCelda);
 
                         $newDisponibilidad = new Disponibilidad();
                         $newDisponibilidad->setButaca($newButaca);
-                        $newDisponibilidad->setDisponible($newButaca->getDisponible());
+                        $newDisponibilidad->setDisponible($opcion[0]);
                         $newDisponibilidad->setIdEvento($idEvento);
 
                         $butacaRepository->save($newButaca, true);
@@ -139,7 +138,7 @@ class CeldaController extends AbstractController
                         
                     }
                 $celdaRepository->save($consultaCelda, true);
-                $contadorCeldasModificadas++;
+                $contadorCeldasModificadas++;*/
                   
                 
             }
