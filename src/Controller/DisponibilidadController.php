@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
 
 #[Route('/disponibilidad')]
 class DisponibilidadController extends AbstractController
@@ -89,7 +90,7 @@ class DisponibilidadController extends AbstractController
         $butacasIDs=$parametros["butacas"];
         // trae todas las disponibilidades donde el id del evento, estado disponible e id butaca corresponden
         $disponibilidadesButaca=$disponibilidadRepository->findByEstado($parametros["idEvento"],$estado, $butacasIDs);
-        
+
         foreach ($disponibilidadesButaca as $key => $disponibilidadButaca){
                 $disponibilidadButaca->setDisponible('Bloqueado');
                 $disponibilidadRepository->save($disponibilidadButaca, true);
@@ -116,20 +117,76 @@ class DisponibilidadController extends AbstractController
     }
 
 
-    // #[Route('/desbloquearbutacas', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
-    // public function desbloquearbutaca(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
-    //     {
-    //     $disp=$disponibilidadRepository;
-    //     $parametro = Array($request);
-    //     $longitud=count($parametro);
-    //     for($contador=0;$contador<$longitud;$contador++){
-    //      if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()!='Bloqueado'){
-    //             return new Response('F', Response::HTTP_PRECONDITION_FAILED);
-    //         }
-    //         if($disp->findOneBy(['id'=>$parametro[$contador]])->getDisponible()=='Bloqueado'){
-    //             $disp->setDisponible('Disponible');
-    //             return new Response('GG', Response::HTTP_OK);
-    //         }
-    //     }
-    // }
+     #[Route('/desbloquearbutacas', name: 'app_disponibilidad_desbloquear_butacas', methods: ['POST'])]
+     public function desbloquearbutacas(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
+     {
+        $estado="Bloqueado";
+        $parametros = $request->toArray();
+        $butacasIDs=$parametros["butacas"];
+        // trae todas las disponibilidades donde el id del evento, estado disponible e id butaca corresponden
+        $disponibilidadesButaca=$disponibilidadRepository->findByEstado($parametros["idEvento"],$estado, $butacasIDs);
+        foreach ($disponibilidadesButaca as $key => $disponibilidadButaca){
+                $disponibilidadButaca->setDisponible('Disponible');
+                $disponibilidadRepository->save($disponibilidadButaca, true);
+                // agregar aqui id butaca al array 
+        }
+        //calcular métricas
+        $cantidadButacasDesbloqueadas=count($disponibilidadesButaca);
+        $cantidadButacasBuscadas=count($butacasIDs);
+        $cantidadButacasModificadas=$cantidadButacasBuscadas-$cantidadButacasDesbloqueadas;
+        $mensaje=null;
+        //id de butacas modificadas
+        
+        if($cantidadButacasBuscadas==$cantidadButacasDesbloqueadas){
+            $mensaje='Butacas modificadas con éxito';
+        }else{
+            $mensaje='Algunas butacas continuan bloqueadas';
+        }
+        //agregar array ids de butacas modificadas a la data
+        $data=[
+            'buscadas'=>$cantidadButacasBuscadas,
+            'modificadas'=>$cantidadButacasDesbloqueadas,
+            'no-validas'=>$cantidadButacasModificadas,
+            'mensaje'=>$mensaje
+        ];
+        return $this->responseHelper->responseDatos($data);
+     }
+
+     #[Route('/comprarbutacas', name: 'app_disponibilidad_comprar_butacas', methods: ['POST'])]
+     public function comprarbutacas(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
+     {
+        $estado="Bloqueado";
+        $parametros = $request->toArray();
+        $butacasIDs=$parametros["butacas"];
+        
+        
+        // trae todas las disponibilidades donde el id del evento, estado disponible e id butaca corresponden
+        $disponibilidadesButaca=$disponibilidadRepository->findByEstado($parametros["idEvento"],$estado, $butacasIDs);
+        foreach ($disponibilidadesButaca as $key => $disponibilidadButaca){
+                $disponibilidadButaca->setDisponible('No disponible');
+                $disponibilidadRepository->save($disponibilidadButaca, true);
+                // agregar aqui id butaca al array 
+        }
+        //calcular métricas
+        
+        $cantidadButacasCompradas=count($disponibilidadesButaca);
+        $cantidadButacasBuscadas=count($butacasIDs);
+        $cantidadButacasModificadas=$cantidadButacasBuscadas-$cantidadButacasCompradas;
+        $mensaje=null;
+        //id de butacas modificadas
+        
+        if($cantidadButacasBuscadas==$cantidadButacasCompradas){
+            $mensaje='Butacas compradas con éxito';
+        }else{
+            $mensaje='Algunas butacas no fueron compradas';
+        }
+        //agregar array ids de butacas modificadas a la data
+        $data=[
+            'buscadas'=>$cantidadButacasBuscadas,
+            'compradas'=>$cantidadButacasCompradas,
+            'no-validas'=>$cantidadButacasModificadas,
+            'mensaje'=>$mensaje
+        ];
+        return $this->responseHelper->responseDatos($data);
+     }
 }
