@@ -23,22 +23,22 @@ class CategoriaButacaController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_categoria_butaca_show', methods: ['GET'])]
-    public function show(CategoriaButaca $categoriaButaca): Response
+    public function show(CategoriaButaca $categoriaButaca): JsonResponse
     {
         return $this->responseHelper->responseDatos( [
             'categoriasButaca' => $categoriaButaca
         ],['ver_categoria']);
     }
 
-    #[Route('/new', name: 'app_categoria_butaca_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CategoriaButacaRepository $categoriaButacaRepository): Response
+    #[Route('/new', name: 'app_categoria_butaca_new', methods: ['POST'])]
+    public function new(Request $request, CategoriaButacaRepository $categoriaButacaRepository): JsonResponse
     {
         // recuperando frecuencias   
-        $parametros=$request->toArray();
-        $request->request->replace(["categoria_butaca"=>$parametros]);
-        $categoriaButaca = new CategoriaButaca();
-        $form = $this->createForm(CategoriaButacaType::class, $categoriaButaca);
         try{
+            $parametros=$request->toArray();
+            $request->request->replace(["categoria_butaca"=>$parametros]);
+            $categoriaButaca = new CategoriaButaca();
+            $form = $this->createForm(CategoriaButacaType::class, $categoriaButaca);
 
             $form->handleRequest($request);
     
@@ -57,7 +57,7 @@ class CategoriaButacaController extends AbstractController
     }
     
     #[Route('/{id}/edit', name: 'app_categoria_butaca_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, CategoriaButaca $categoriaButaca, CategoriaButacaRepository $categoriaButacaRepository): Response
+    public function edit(Request $request, CategoriaButaca $categoriaButaca, CategoriaButacaRepository $categoriaButacaRepository): JsonResponse
     {
         // recuperando frecuencias   
         $parametros=$request->toArray();
@@ -80,7 +80,7 @@ class CategoriaButacaController extends AbstractController
     }
     
     #[Route('/{id}', name: 'app_categoria_butaca_delete', methods: ['POST'])]
-    public function delete(Request $request, CategoriaButaca $categoriaButaca=null, CategoriaButacaRepository $categoriaButacaRepository): Response
+    public function delete(Request $request, CategoriaButaca $categoriaButaca=null, CategoriaButacaRepository $categoriaButacaRepository): JsonResponse
     {
         if ($categoriaButaca) {
             $categoriaButacaRepository->remove($categoriaButaca, true);
