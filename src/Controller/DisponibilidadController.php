@@ -13,13 +13,13 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
  #[Route('/disponibilidad')]
  class DisponibilidadController extends AbstractController
  {
-//     private ResponseHelper $responseHelper;
+    private ResponseHelper $responseHelper;
 
 
-//     public function __construct(ResponseHelper $responseHelper)
-//     {
-//         $this->responseHelper = $responseHelper;
-//     }
+    public function __construct(ResponseHelper $responseHelper)
+    {
+        $this->responseHelper = $responseHelper;
+    }
 //     #[Route('/', name: 'app_disponibilidad_index', methods: ['GET'])]
 //      public function index(DisponibilidadRepository $disponibilidadRepository): Response
 //      {
@@ -105,7 +105,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         if($cantidadButacasBuscadas==$cantidadButacasBloqueadas){
             $mensaje='Butacas modificadas con éxito';
         }else{
-            $mensaje='Algunas butacas ya han sido compradas';
+            $mensaje='Algunas butacas no han sido bloqueadas';
         }
         //agregar array ids de butacas modificadas a la data
         $data=[
@@ -141,7 +141,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         if($cantidadButacasBuscadas==$cantidadButacasDesbloqueadas){
             $mensaje='Butacas modificadas con éxito';
         }else{
-            $mensaje='Algunas butacas continuan bloqueadas';
+            $mensaje='Algunas butacas no fueron desbloqueadas';
         }
         //agregar array ids de butacas modificadas a la data
         $data=[
