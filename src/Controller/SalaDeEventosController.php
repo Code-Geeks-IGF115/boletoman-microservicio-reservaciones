@@ -59,6 +59,7 @@ class SalaDeEventosController extends AbstractController
         $salaDeEvento = new SalaDeEventos();
         $form = $this->createForm(SalaDeEventosType::class, $salaDeEvento);
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
                 //para guardar en base de datos
                 $salaDeEventosRepository->save($salaDeEvento, true);
@@ -71,11 +72,9 @@ class SalaDeEventosController extends AbstractController
                         $celda->setColumna($columna);
                         $celda->setSalaDeEventos($salaDeEvento);
                         $salaDeEvento->addCelda($celda);
-                        $celdaRepository->save($celda,true);
-                        
+                        $celdaRepository->save($celda,true);   
                     }
                 }
-
                 return $this->responseHelper->responseDatos(["message"=>"Sala de Eventos Guardada.", "id"=>$salaDeEvento->getId()]);
         }       
         else{
