@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ButacaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ButacaRepository::class)]
 class Butaca
@@ -11,13 +12,16 @@ class Butaca
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ver_butacas'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 15)]
+    #[Groups(['ver_butacas'])]
     private ?string $codigoButaca = null;
 
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ver_butacas'])]
     private ?Celda $celda = null;
 
     public function getId(): ?int
