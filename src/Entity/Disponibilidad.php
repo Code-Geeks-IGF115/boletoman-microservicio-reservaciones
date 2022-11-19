@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DisponibilidadRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DisponibilidadRepository::class)]
 class Disponibilidad
@@ -12,10 +13,12 @@ class Disponibilidad
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
+    #[Groups(['ver_disponibilidad'])]
     #[ORM\Column(length: 100)]
     private ?string $disponible = null;
 
+   
     #[ORM\Column(nullable: true)]
     private ?int $idEvento = null;
 

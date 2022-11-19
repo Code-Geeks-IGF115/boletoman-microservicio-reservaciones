@@ -39,6 +39,7 @@ class CategoriaButacaRepository extends ServiceEntityRepository
         }
     }
 
+
 //    /**
 //     * @return CategoriaButaca[] Returns an array of CategoriaButaca objects
 //     */
