@@ -67,11 +67,11 @@ class CeldaController extends AbstractController
         ]);
     }
 
-    #[Route('/{idCategoria}/{idSalaDeEventos}/{idEvento}/new', name: 'asignar_categoria_a_celda', methods: ['POST'])]
+    #[Route('/{idCategoria}/{idEvento}/new', name: 'asignar_categoria_a_celda', methods: ['POST'])]
     public function asignarCategoriaACeldas(
         Request $request, CategoriaButacaRepository $categoriaButacaRepository,
         CeldaRepository $celdaRepository, ButacaRepository $butacaRepository, 
-        $idCategoria, $idSalaDeEventos, $idEvento, 
+        $idCategoria, $idEvento, 
         DisponibilidadRepository $disponibilidadRepository): JsonResponse {
 
         //recuperando la categoria butaca
