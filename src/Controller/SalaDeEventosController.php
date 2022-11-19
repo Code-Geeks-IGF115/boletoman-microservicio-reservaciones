@@ -165,4 +165,14 @@ class SalaDeEventosController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos($e->getMessage());
         }
     }
+
+    #[Route('/ejemplo/servidor', name: 'ejemplo_servidor', methods: ['POST'])]
+    public function ejemploServidor(Request $request): JsonResponse
+    {
+            // recibiendo parametros
+            $parametros=$request->toArray(); 
+            $miNombre=$parametros["miNombre"];
+            return $this->responseHelper->responseMessage("Hola ".$miNombre."!");
+   
+    }
 }
