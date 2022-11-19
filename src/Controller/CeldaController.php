@@ -86,97 +86,77 @@ class CeldaController extends AbstractController
         if ($request->getContent()) {
             $celdas = json_decode($request->getContent(), true);
         }
-            $estado = ["Disponible", "Bloqueado"];//estados de disponibilidad
-            $contadorCeldasModificadas =0;
+        $estado = ["Disponible", "Bloqueado"];//estados de disponibilidad
+        $contadorCeldasModificadas =0;
             
-            //consulta cuantas butacas hay disponibles con el idEvento del request
-            //$consultaButacasHechas = $disponibilidadRepository->findBy(['disponible' => $estado[0], 'idEvento' => $idEvento]);
-            //dd($consultaButacasHechas);
+        //consulta que butacas estan disponibles y sin evento para eliminarlas
+        $consultaButacasVacias = $disponibilidadRepository->findBy(['disponible' => $estado[0], 'idEvento' => null]);
+        $contadorConsultaButacasVacias = count($consultaButacasVacias);
             
-            //consulta que butacas estan disponibles y sin evento para eliminarlas
-            $consultaButacasVacias = $disponibilidadRepository->findBy(['disponible' => $estado[0], 'idEvento' => null]);
-            $contadorConsultaButacasVacias = count($consultaButacasVacias);
-            
-            //si hay butacas disponibles sin evento, se eliminan
-            if ($contadorConsultaButacasVacias > 0) {
-                foreach ($consultaButacasVacias as $key) {
+        //si hay butacas disponibles sin evento, se eliminan
+        if ($contadorConsultaButacasVacias > 0) {
+            foreach ($consultaButacasVacias as $key) {
                     $disponibilidadRepository->remove($consultaButacasVacias[$key], true);
                     $butacaRepository->remove($consultaButacasVacias[$key]->getButaca(), true);
-                }
             }
+        }
 
-            foreach ($celdas["celdas"] as $key => $celda) {
-                $consultaCelda = $celdaRepository->findOneBy(['salaDeEventos' => $salaDeEvento, 
-                'fila' => $celda["fila"], 'columna' => $celda["columna"]]);
+        foreach ($celdas["celdas"] as $key => $celda) {
+            $consultaCelda = $celdaRepository->findOneBy(['salaDeEventos' => $salaDeEvento, 
+            'fila' => $celda["fila"], 'columna' => $celda["columna"]]);
 
-                if ($consultaCelda != null) {
-                    $butacasACrear = 0;
-                    $contadorButacas = 0;
-                    $consultaCelda->setCantidadButacas($celda["cantidadButacas"]);
-                    $consultaCelda->setCategoriaButaca($categoriaButaca);
+            if ($consultaCelda != null) {
+                $butacasACrear = 0;
+                $consultaCelda->setCantidadButacas($celda["cantidadButacas"]);
+                $consultaCelda->setCategoriaButaca($categoriaButaca);
                     
-                    $variable=array(null);
-                    //se cuenta cuantas butacas hay de la celda 
-                    $butacasCelda = $butacaRepository->findBy(['celda' =>$consultaCelda->getId()]);
-                    foreach ($butacasCelda as $key => $value) {
+                $variable=array(null);
+                //se cuenta cuantas butacas hay de la celda 
+                $butacasCelda = $butacaRepository->findBy(['celda' =>$consultaCelda->getId()]);
+                foreach ($butacasCelda as $key => $value) {
                         
-                        $variable[] = $butacasCelda[$key]->getId();
-                    }
-                    $butacaDisponibilidad = $disponibilidadRepository->
-                    findByEstado($idEvento, $estado[0], $variable);
-                    $cantidadButacas = count($butacaDisponibilidad);
-
-                    $butacasACrear = $celda["cantidadButacas"] - $cantidadButacas;
-
-                    $a =  count($variable) - $cantidadButacas;
-
-                   if ($celda["columna"] == 1) {
-                        dd($cantidadButacas);
-                    }
-                    
-                    //se hace una resta a las butacas que pide el json request para saber cuantas butacas necesita crear
-            
-                    //si hay mas butacas creadas de las que pide el json request, se eliminan las sobrantes
-                    if ($butacasACrear < 0) {
-                       
-                       for ($i=0; $i < ($butacasACrear*-1); $i++) {
-                                        
-                            $disponibilidadRepository->remove($butacaDisponibilidad[$cantidadButacas-($i+1)], true);
-                            $butacaRepository->remove($butacaDisponibilidad[$cantidadButacas-($i+1)]->getButaca(), true);
-                        }
-                            
-                    }
-                    //si hay menos butacas creadas de las que pide el json request, se crean las que faltan
-                    elseif ($butacasACrear > 0) {
-                        //dd("se crearan butacas");
-
-                        //crear disponibilidades y butacas
-                        for ($i=0; $i < $butacasACrear; $i++) { 
-
-                            //dd("se crearan butacas");
-                            $newButaca = new Butaca();
-                            $newButaca->setCodigoButaca(strval(($i+1+$cantidadButacas).":".$categoriaButaca->getCodigo()));
-                            $newButaca->setCelda($consultaCelda);
-        
-                            $newDisponibilidad = new Disponibilidad();
-                            $newDisponibilidad->setButaca($newButaca);
-                            $newDisponibilidad->setDisponible($estado[0]);
-                            $newDisponibilidad->setIdEvento($idEvento);
-        
-                            $butacaRepository->save($newButaca, true);
-                            $disponibilidadRepository->save($newDisponibilidad, true);         
-                        }
-                    }  
-                    
-                    $celdaRepository->save($consultaCelda, true);
-                    $contadorCeldasModificadas++;
+                    $variable[] = $butacasCelda[$key]->getId();
                 }
-                
-            }
+                //sabiendo las butacas de la celda, se filtran por el evento seleccionado y disponibles
+                $butacaDisponibilidad = $disponibilidadRepository->findByEstado($idEvento, $estado[0], $variable);
+                $cantidadButacas = count($butacaDisponibilidad);
+
+                //se hace una resta a las butacas que pide el json request para saber cuantas butacas necesita crear o quitar
+                $butacasACrear = $celda["cantidadButacas"] - $cantidadButacas;
+            
+                //si hay mas butacas creadas de las que pide el json request, se eliminan las sobrantes
+                if ($butacasACrear < 0) {
+                       
+                    for ($i=0; $i < ($butacasACrear*-1); $i++) {
+                                        
+                        $disponibilidadRepository->remove($butacaDisponibilidad[$cantidadButacas-($i+1)], true);
+                        $butacaRepository->remove($butacaDisponibilidad[$cantidadButacas-($i+1)]->getButaca(), true);
+                    }           
+                }
+                //si hay menos butacas creadas de las que pide el json request, se crean las que faltan
+                elseif ($butacasACrear > 0) {
+                    //crear disponibilidades y butacas
+                    for ($i=0; $i < $butacasACrear; $i++) { 
+
+                        $newButaca = new Butaca();
+                        $newButaca->setCodigoButaca(strval(($i+1+$cantidadButacas).":".$categoriaButaca->getCodigo()));
+                        $newButaca->setCelda($consultaCelda);
         
+                        $newDisponibilidad = new Disponibilidad();
+                        $newDisponibilidad->setButaca($newButaca);
+                        $newDisponibilidad->setDisponible($estado[0]);
+                        $newDisponibilidad->setIdEvento($idEvento);
+        
+                        $butacaRepository->save($newButaca, true);
+                        $disponibilidadRepository->save($newDisponibilidad, true);         
+                    }
+                }       
+                $celdaRepository->save($consultaCelda, true);
+                $contadorCeldasModificadas++;
+            }          
+        }  
         return $this->responseHelper->responsedatos(['message' =>"celdas modificadas: " . strval($contadorCeldasModificadas),
                 'celdasModificadas' => $contadorCeldasModificadas]);
-    //return $this->responseHelper->responsedatos(['Disponibilidad' => $consultaButacasHechas[3]->getButaca()], ['ver_butacas']);
     }
 
     #[Route('/{id}/edit', name: 'app_celda_edit', methods: ['GET', 'POST'])]
@@ -203,7 +183,6 @@ class CeldaController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $celda->getId(), $request->request->get('_token'))) {
             $celdaRepository->remove($celda, true);
         }
-
         return $this->redirectToRoute('app_celda_index', [], Response::HTTP_SEE_OTHER);
     }
 }
