@@ -9,7 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
-
+use App\Repository\ButacaRepository;
+use App\Repository\CategoriaButacaRepository;
 
 
  #[Route('/disponibilidad')]
@@ -225,5 +226,30 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         );
         return $responsebad;;
      }
-     
+//Quiero tener los nombres de categoria butaca, su id, y su detalle compra, basicamente por el idEvento al que pertenecen
+     #[Route('/butacas/de/evento/{idEvento}', name: 'app_disponibilidad_butacas_por_evento', methods: ['GET'])]
+     public function butacasPorEvento(Request $request, DisponibilidadRepository $disponibilidadRepository, 
+     CategoriaButacaRepository $categoriaButacaRepository, $idEvento): JsonResponse{
+        
+        $estado="Bloqueado";
+        $parametros = $request->toArray();
+        $butacasIDs=$parametros["butacas"];
+        //debo ver si es igual $ideEvento a $parametros["idEvento"]
+        // trae todas las disponibilidades donde el id del evento, estado disponible e id butaca corresponden
+        $disponibilidadBuscar=$disponibilidadRepository->find($idEvento); 
+        if ($disponibilidadBuscar == null) { //verifica si el id ingresado existe 
+            return $this->responseHelper->responseMessage("Evento no existe");
+        }
+        
+        $disponibilidadDeButaca=$disponibilidadRepository->findByEstado($parametros["idEvento"],$estado, $butacasIDs);    
+        //Este deberia almacenar las butacas que no esten desponibles xD
+        foreach ($disponibilidadDeButaca as $disponibilidadButaca){
+            $disponibilidadButaca->getButaca();
+            $disponibilidadButaca->getIdDetalleCompra();
+        }
+        /*$parametros["idEvento"]=$disponibilidadBuscar;
+        
+*/
+        return $this->responseHelper->responseDatos(['disponibilidad'=>$disponibilidadDeButaca]);
+     }
 }
