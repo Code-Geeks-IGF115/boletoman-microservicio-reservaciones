@@ -157,66 +157,43 @@ use App\Repository\CategoriaButacaRepository;
      }
 
      #[Route('/comprarbutacas', name: 'app_disponibilidad_comprar_butacas', methods: ['POST'])]
-     public function comprarbutacas(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
+     public function comprarbutacas(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
      {
-        $responsegud = new Response(
-            'Fallo',
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
-        $responsebad = new Response(
-            'bien',
-            Response::HTTP_PRECONDITION_FAILED,
-            array('content-type' => 'text/html')
-        );
-       
-        //Definir el estado habilitado para comprar
         $estado="Bloqueado";
-
-        //convertir el request en array
         $parametros = $request->toArray();
-
-        //Obtener los arreglos de disponibilidades
-        $disp=$parametros["disponibilidades"];
-
-        //Obtener el numero de arreglos de butacas
-        foreach($disp as $diponibilidad)
-        {
-            $butacas=$diponibilidad["butacas"];
-
-            //Obtener el butaca_id de todos los arreglos butacas del request
-            foreach($butacas as $butaca)
-            {
-                $butacasIDs[]=$butaca;
-            }
-
-        }
-               
+        $butacasIDs=$parametros["butacas"];
+        
+        
         // trae todas las disponibilidades donde el id del evento, estado disponible e id butaca corresponden
         $disponibilidadesButaca=$disponibilidadRepository->findByEstado($parametros["idEvento"],$estado, $butacasIDs);
-
-
-        //calcular métricas 
-        $cantidadButacasCompradas=count($disponibilidadesButaca);
-        $cantidadButacasBuscadas=count($butacasIDs);
-
-        //id de butacas modificadas
-        
-        if($cantidadButacasBuscadas==$cantidadButacasCompradas){
-            //Modifica la disponible a todas las disponibilidades que corresponden
-            foreach ($disponibilidadesButaca as $key => $disponibilidadButaca)
-            {
+        foreach ($disponibilidadesButaca as $key => $disponibilidadButaca){
                 $disponibilidadButaca->setDisponible('No disponible');
                 $disponibilidadRepository->save($disponibilidadButaca, true);
                 // agregar aqui id butaca al array 
-                return $responsegud;
-            }
-        return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_OK);
-        }else{
-            return $responsebad;
         }
+        //calcular métricas
+        
+        $cantidadButacasCompradas=count($disponibilidadesButaca);
+        $cantidadButacasBuscadas=count($butacasIDs);
+        $cantidadButacasModificadas=$cantidadButacasBuscadas-$cantidadButacasCompradas;
+        $mensaje=null;
+        //id de butacas modificadas
+        
+        if($cantidadButacasBuscadas==$cantidadButacasCompradas){
+            $mensaje='Butacas compradas con éxito';
+        }else{
+            $mensaje='Algunas butacas no fueron compradas';
+        }
+        //agregar array ids de butacas modificadas a la data
+        $data=[
+            'buscadas'=>$cantidadButacasBuscadas,
+            'compradas'=>$cantidadButacasCompradas,
+            'no-validas'=>$cantidadButacasModificadas,
+            'mensaje'=>$mensaje
+        ];
+        return $this->responseHelper->responseDatos($data);
      }
-
+     
      #[Route('/butacasVendidas', name: 'app_disponibilidad_comprar_butacas', methods: ['POST'])]
      public function butacasVendidas(Request $request, DisponibilidadRepository $disponibilidadRepository): Response{
         $responsebad = new Response(
