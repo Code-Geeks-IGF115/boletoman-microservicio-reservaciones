@@ -84,17 +84,5 @@ class Butaca
 
     }
 
-    public function getCategoriaButaca(): ?CategoriaButaca
-    {
-        return $this->categoriaButaca;
-    }
-
-    public function setCategoriaButaca(?CategoriaButaca $categoriaButaca): self
-    {
-        $this->categoriaButaca = $categoriaButaca;
-
-        return $this;
-
-    }
 
 }
