@@ -14,11 +14,13 @@ class Disponibilidad
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
+    #[Groups(['ver_disponibilidad'])]
     #[ORM\Column(length: 100)]
     #[Groups(['ver_butacas'])]
     private ?string $disponible = null;
 
+   
     #[ORM\Column(nullable: true)]
     #[Groups(['ver_butacas'])]
     private ?int $idEvento = null;

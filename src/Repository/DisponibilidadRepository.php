@@ -62,6 +62,18 @@ class DisponibilidadRepository extends ServiceEntityRepository
     * Función que busca disponibilidad por estado, id del Butacas e id del Evento, para bloquear,
     * desbloquear y comprar butacas
     */
+   public function findByDisp($idEvento, $estado): array
+   {
+       return $this->createQueryBuilder('d')
+           ->andWhere('d.idEvento = :id_evento')
+           ->setParameter('id_evento', $idEvento)
+           ->andWhere('d.disponible = :disponible')
+           ->setParameter('disponible', $estado)
+           ->orderBy('d.id', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
    public function findByEstado($idEvento, $estado, array $idButacas): array
    {
        return $this->createQueryBuilder('d')
@@ -75,6 +87,24 @@ class DisponibilidadRepository extends ServiceEntityRepository
            ->getQuery()
            ->getResult()
        ;
+   }
+
+   public function calcularIngresosPorCategoriaButaca($idEvento, $estado): array
+   {
+    $entityManager = $this->getEntityManager();
+    $query = $entityManager->createQuery(
+        'SELECT cb.codigo, cb.precioUnitario, SUM(cb.precioUnitario), COUNT(cb.codigo)
+        FROM App\Entity\Disponibilidad u 
+        JOIN u.butaca a 
+        JOIN a.celda c 
+        JOIN c.categoriaButaca cb
+        where u.disponible = :disponible and u.idEvento = :idEvento
+        GROUP BY cb.codigo, cb.precioUnitario
+        '
+    )->setParameter('disponible', $estado)
+    ->setParameter('idEvento',$idEvento);
+
+    return $query->getResult();
    }
 //    /**
 //     * @return Disponibilidad[] Returns an array of Disponibilidad objects
