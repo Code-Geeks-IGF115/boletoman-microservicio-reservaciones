@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ButacaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ButacaRepository::class)]
 class Butaca
@@ -11,18 +12,21 @@ class Butaca
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ver_butacas'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 15)]
+    #[Groups(['ver_butacas'])]
     private ?string $codigoButaca = null;
-
+    
+    #[Groups(['ver_butacas'])]
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     #[ORM\JoinColumn(nullable: false)]
+
     private ?Celda $celda = null;
 
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     private ?CategoriaButaca $categoriaButaca = null;
-
 
     public function getId(): ?int
     {
@@ -41,30 +45,6 @@ class Butaca
         return $this;
     }
 
-    public function getDisponible(): ?string
-    {
-        return $this->disponible;
-    }
-
-    public function setDisponible(string $disponible): self
-    {
-        $this->disponible = $disponible;
-
-        return $this;
-    }
-
-    public function getMesa(): ?int
-    {
-        return $this->mesa;
-    }
-
-    public function setMesa(?int $mesa): self
-    {
-        $this->mesa = $mesa;
-
-        return $this;
-    }
-
     public function getCelda(): ?Celda
     {
         return $this->celda;
@@ -76,6 +56,7 @@ class Butaca
 
         return $this;
     }
+
 
     public function getDetalleCompraID(): ?int
     {
@@ -100,4 +81,5 @@ class Butaca
 
         return $this;
     }
+
 }
