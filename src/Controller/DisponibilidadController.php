@@ -260,12 +260,15 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             'precioTotal' => $precioTotal,
             'precioUnitario'=>intval($precio)
         ];
-        return $this->responseHelper->responseDatos($data);
+
+        $resultado=$disponibilidadRepository->calcularIngresosPorCategoriaButaca($idEvento, $estado);
+
+        // return $this->responseHelper->responseDatos($resultado);
 
         /*$estado = 'No Disponible';
         $categoriaButacas=$disponibilidadRepository->calcularIngresosPorCategoriaButaca($idEvento,$estado);
-
-        return $this->responseHelper->responseDatos($categoriaButacas);*/
+*/
+        return $this->responseHelper->responseDatos($resultado);
                 
      }
      
