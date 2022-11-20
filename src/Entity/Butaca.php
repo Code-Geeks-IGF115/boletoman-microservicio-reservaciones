@@ -18,11 +18,15 @@ class Butaca
     #[ORM\Column(length: 15)]
     #[Groups(['ver_butacas'])]
     private ?string $codigoButaca = null;
-
+    
+    #[Groups(['ver_butacas'])]
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['ver_butacas'])]
+
     private ?Celda $celda = null;
+
+    #[ORM\ManyToOne(inversedBy: 'butacas')]
+    private ?CategoriaButaca $categoriaButaca = null;
 
     public function getId(): ?int
     {
@@ -49,6 +53,31 @@ class Butaca
     public function setCelda(?Celda $celda): self
     {
         $this->celda = $celda;
+
+        return $this;
+    }
+
+
+    public function getDetalleCompraID(): ?int
+    {
+        return $this->detalle_compra_id;
+    }
+
+    public function setDetalleCompraID(?int $detalle_compra_id): self
+    {
+        $this->detalle_compra_id = $detalle_compra_id;
+
+        return $this;
+    }
+
+    public function getCategoriaButaca(): ?CategoriaButaca
+    {
+        return $this->categoriaButaca;
+    }
+
+    public function setCategoriaButaca(?CategoriaButaca $categoriaButaca): self
+    {
+        $this->categoriaButaca = $categoriaButaca;
 
         return $this;
     }
