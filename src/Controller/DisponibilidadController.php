@@ -1,16 +1,21 @@
 <?php
 
 namespace App\Controller;
+
+use App\Entity\CategoriaButaca;
 use App\Entity\Disponibilidad;
+use App\Repository\CategoriaButacaRepository;
 use Symfony\Component\HttpFoundation\{Response,JsonResponse};
 use App\Repository\DisponibilidadRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
+use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use App\Repository\ButacaRepository;
 use App\Repository\CategoriaButacaRepository;
+
 
 
  #[Route('/disponibilidad')]
@@ -22,6 +27,7 @@ use App\Repository\CategoriaButacaRepository;
     public function __construct(ResponseHelper $responseHelper)
     {
         $this->responseHelper = $responseHelper;
+       
     }
      #[Route('/', name: 'app_disponibilidad_index', methods: ['GET'])]
       public function index(DisponibilidadRepository $disponibilidadRepository): Response
@@ -217,14 +223,54 @@ use App\Repository\CategoriaButacaRepository;
         }
      }
 
-     #[Route('/butacasVendidas', name: 'app_disponibilidad_comprar_butacas', methods: ['POST'])]
-     public function butacasVendidas(Request $request, DisponibilidadRepository $disponibilidadRepository): Response{
-        $responsebad = new Response(
-            'Fallo',
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
-        return $responsebad;;
+     //Ver Butacas Vendiads
+     #[Route('/butacasVendidas/{idEvento}', name: 'app_butacas_vendidas', methods: ['GET'])]
+     public function butacasVendidas($idEvento, CategoriaButacaRepository $categoriaButacaRepository, DisponibilidadRepository $disponibilidadRepository ): JsonResponse{
+       
+      //Declaracion de variabales
+        $estado = 'No Disponible';
+        $cantidadButacasCompradas = 0;
+        $cantidadTotalButacas=0;
+        $precioTotal = 0;
+
+        //Llamada a base de datos de todo lo necesario
+        $categorias=$categoriaButacaRepository->findBysalaDeEventos($idEvento);      
+        $disponibilidadesButaca=$disponibilidadRepository->findByidEvento($idEvento);
+        
+        //obtenemos los precios de cada categoria
+        foreach($categorias as $categoria){
+            $precio=$categoria->getPrecioUnitario();
+            $tipoButacas= $categoria->getCodigo();
+        } 
+      
+        //obtenemos cuantas 
+        foreach($disponibilidadesButaca as $disp){
+            if($disp->getdisponible()==$estado){
+                $cantidadButacasCompradas++;
+            }   
+            $cantidadTotalButacas++;
+        }
+
+        $precioTotal = $cantidadButacasCompradas*intval($precio);
+
+        $data = [
+            'idEvento'=>$idEvento,
+            'cantidadButacasTotal'=>$cantidadTotalButacas,
+            'tipoButaca'=>$tipoButacas,
+            'cantidadButacasCompradas'=>$cantidadButacasCompradas,
+            'precioTotal' => $precioTotal,
+            'precioUnitario'=>intval($precio)
+        ];
+
+        $resultado=$disponibilidadRepository->calcularIngresosPorCategoriaButaca($idEvento, $estado);
+
+        // return $this->responseHelper->responseDatos($resultado);
+
+        /*$estado = 'No Disponible';
+        $categoriaButacas=$disponibilidadRepository->calcularIngresosPorCategoriaButaca($idEvento,$estado);
+*/
+        return $this->responseHelper->responseDatos($resultado);
+                
      }
 //Quiero tener los nombres de categoria butaca, su id, y su detalle compra, basicamente por el idEvento al que pertenecen
      #[Route('/butacas/de/evento/{idEvento}', name: 'app_disponibilidad_butacas_por_evento', methods: ['GET'])]
