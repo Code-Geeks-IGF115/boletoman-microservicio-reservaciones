@@ -9,23 +9,26 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: DisponibilidadRepository::class)]
 class Disponibilidad
 {
+    #[Groups(['comprar_butacas'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
     
-    #[Groups(['ver_disponibilidad'])]
+    #[Groups(['ver_disponibilidad','comprar_butacas'])]
     #[ORM\Column(length: 100)]
     private ?string $disponible = null;
 
-   
+    #[Groups(['comprar_butacas'])]
     #[ORM\Column(nullable: true)]
     private ?int $idEvento = null;
 
+    #[Groups(['comprar_butacas'])]
     #[ORM\Column]
     #[ORM\JoinColumn(nullable: true)]
     private ?int $idDetalleCompra = null;
 
+    #[Groups(['comprar_butacas'])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Butaca $butaca = null;

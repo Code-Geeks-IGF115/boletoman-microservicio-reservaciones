@@ -4,15 +4,17 @@ namespace App\Entity;
 
 use App\Repository\ButacaRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ButacaRepository::class)]
 class Butaca
 {
+    #[Groups(['comprar_butacas'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['comprar_butacas'])]
     #[ORM\Column(length: 15)]
     private ?string $codigoButaca = null;
 
