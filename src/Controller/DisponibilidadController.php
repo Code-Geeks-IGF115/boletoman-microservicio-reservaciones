@@ -164,16 +164,6 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
      #[Route('/comprarbutacas', name: 'app_disponibilidad_comprar_butacas', methods: ['POST'])]
      public function comprarbutacas(Request $request, DisponibilidadRepository $disponibilidadRepository): Response
      {
-        $responsegud = new Response(
-            'Fallo',
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
-        $responsebad = new Response(
-            'bien',
-            Response::HTTP_PRECONDITION_FAILED,
-            array('content-type' => 'text/html')
-        );
        
         //Definir el estado habilitado para comprar
         $estado="Bloqueado";
@@ -206,19 +196,34 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         $cantidadButacasBuscadas=count($butacasIDs);
 
         //id de butacas modificadas
-        
+        $butacasCompradas=[];
         if($cantidadButacasBuscadas==$cantidadButacasCompradas){
             //Modifica la disponible a todas las disponibilidades que corresponden
             foreach ($disponibilidadesButaca as $key => $disponibilidadButaca)
             {
                 $disponibilidadButaca->setDisponible('No disponible');
+                $butacasCompradas[]=$disponibilidadButaca;
                 $disponibilidadRepository->save($disponibilidadButaca, true);
                 // agregar aqui id butaca al array 
-                return $responsegud;
             }
-        return $this->redirectToRoute('app_disponibilidad_index', [], Response::HTTP_OK);
-        }else{
-            return $responsebad;
+
+            
+            return $this->responseHelper->responseDatos(
+                [
+                'message'=>'Se realizo la compra de butacas.',
+                'butacasCompradas'=>$butacasCompradas
+                ],
+                ['comprar_butacas'],
+                Response::HTTP_OK
+            );
+            }else{
+            return new JsonResponse(
+                [
+                    'message'=>'No se pudo realizar la compra de todas las butacas butacas.',
+                    'butacasCompradas'=>$butacasCompradas
+                ],
+                Response::HTTP_PRECONDITION_FAILED,
+            );
         }
      }
 
