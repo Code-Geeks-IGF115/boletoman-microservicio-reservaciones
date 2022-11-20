@@ -217,11 +217,12 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
                 Response::HTTP_OK
             );
             }else{
-            return new JsonResponse(
+            return $this->responseHelper->responseDatos(
                 [
                     'message'=>'No se pudo realizar la compra de todas las butacas butacas.',
                     'butacasCompradas'=>$butacasCompradas
                 ],
+                ['comprar_butacas'],
                 Response::HTTP_PRECONDITION_FAILED,
             );
         }
