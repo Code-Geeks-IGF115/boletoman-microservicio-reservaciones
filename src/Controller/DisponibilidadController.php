@@ -271,5 +271,33 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         return $this->responseHelper->responseDatos($resultado);
                 
      }
+
+     #[Route('/mis/boletos', name: 'mis_boletos', methods: ['POST'])]
+    public function buscarCompras(Request $request): JsonResponse
+    {
+        $mensaje="Hola Mundo!";
+        $parametrosDetalleCompra = $request->toArray();
+        //dd($compras);
+        
+        /*try{
+            // recibiendo parametros
+            //SOY SERVIDOR
+            //$parametros=$request->toArray(); 
+            //$miNombre=$parametros["nombreCompleto"];
+            // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
+            $response = $this->client->request(
+                'POST', 
+                'https://boletoman-reservaciones.herokuapp.com/', [
+                // defining data using an array of parameters
+                'json' => ['miNombre' => $idCompra],
+            ]);
+            $resultadosDeConsulta=$response->toArray();
+            $mensaje=$resultadosDeConsulta["message"];
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($mensaje);  
+        }*/
+
+        return $this->responseHelper->responseDatos($parametrosDetalleCompra);     
+    }
      
 }
