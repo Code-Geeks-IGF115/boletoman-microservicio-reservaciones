@@ -14,6 +14,7 @@ class Celda
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ver_butacas'])]
     private ?int $id = null;
 
     #[ORM\Column]

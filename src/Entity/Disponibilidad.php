@@ -11,25 +11,30 @@ class Disponibilidad
 {
     #[Groups(['comprar_butacas'])]
     #[ORM\Id]
+    #[Groups(['ver_butacas'])]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
     
     #[Groups(['ver_disponibilidad','comprar_butacas'])]
     #[ORM\Column(length: 100)]
+    #[Groups(['ver_butacas'])]
     private ?string $disponible = null;
 
     #[Groups(['comprar_butacas'])]
     #[ORM\Column(nullable: true)]
+    #[Groups(['ver_butacas'])]
     private ?int $idEvento = null;
 
     #[Groups(['comprar_butacas'])]
     #[ORM\Column]
+    #[Groups(['ver_butacas'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?int $idDetalleCompra = null;
 
     #[Groups(['comprar_butacas'])]
     #[ORM\ManyToOne]
+    #[Groups(['ver_butacas'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Butaca $butaca = null;
 
