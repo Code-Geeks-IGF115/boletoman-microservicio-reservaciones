@@ -304,7 +304,7 @@ class DisponibilidadController extends AbstractController
 //Quiero tener los nombres de categoria butaca, su id, y su detalle compra, basicamente por el idEvento al que pertenecen
      #[Route('/butacas/de/evento/{idEvento}/pdf', name: 'app_disponibilidad_butacas_por_evento', methods: ['GET'])]
      public function butacasPorEvento(Request $request, DisponibilidadRepository $disponibilidadRepository, 
-     CategoriaButacaRepository $categoriaButacaRepository, $idEvento): JsonResponse{      
+     $idEvento): JsonResponse{      
         $estado="Bloqueado";
         $disponibilidadBuscar=$disponibilidadRepository->findBy(['idEvento'=>$idEvento]); 
         if ($disponibilidadBuscar == null) { //verifica si el id ingresado existe 
