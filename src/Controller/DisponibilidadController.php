@@ -277,7 +277,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
     {
         $mensaje="Hola Mundo!";
         $parametrosDetalleCompra = $request->toArray();
-        dd($parametrosDetalleCompra);
+        //dd($parametrosDetalleCompra);
         
         /*try{
             // recibiendo parametros
@@ -297,7 +297,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($parametrosDetalleCompra, ['ver_boletos']);     
+        return $this->responseHelper->responseDatos($parametrosDetalleCompra[0]["cantidad"]);     
     }
      
 }
