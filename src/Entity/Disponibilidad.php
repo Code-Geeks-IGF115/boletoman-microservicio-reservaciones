@@ -16,6 +16,7 @@ class Disponibilidad
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 100)]
     #[Groups(['ver_butacas', 'ver_disponibilidad','comprar_butacas'])]
     private ?string $disponible = null;

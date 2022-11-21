@@ -311,11 +311,20 @@ class DisponibilidadController extends AbstractController
      }
 
      #[Route('/mis/boletos', name: 'mis_boletos', methods: ['POST'])]
-    public function buscarCompras(Request $request): JsonResponse
+    public function buscarCompras(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
     {
         $mensaje="Hola Mundo!";
+        $variable=[];
         $parametrosDetalleCompra = $request->toArray();
-        var_dump($parametrosDetalleCompra);
+        foreach ($parametrosDetalleCompra["idDetalleCompra"] as $key) {
+            $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
+            if ($disponibilidadCompra != null) {
+                $variable[] = $disponibilidadCompra;
+            }
+            
+        }
+        //dd($variable);
+        //var_dump($parametrosDetalleCompra);
         
         /*try{
             // recibiendo parametros
@@ -335,7 +344,7 @@ class DisponibilidadController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($parametrosDetalleCompra);     
+        return $this->responseHelper->responseDatos($variable, ['ver_butacas']);     
     }
      
 }

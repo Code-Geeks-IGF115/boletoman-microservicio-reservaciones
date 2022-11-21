@@ -15,7 +15,7 @@ class CategoriaButaca
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['ver_evento','ver_categoria'])]
+    #[Groups(['ver_evento','ver_categoria', 'ver_butacas'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 10)]
