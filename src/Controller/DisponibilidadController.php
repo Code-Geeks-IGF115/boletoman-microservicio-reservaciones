@@ -277,7 +277,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
     {
         $mensaje="Hola Mundo!";
         $parametrosDetalleCompra = $request->toArray();
-        $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $parametrosDetalleCompra[0]["id"]]);
+        //$disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $parametrosDetalleCompra[0]["id"]]);
         //dd($parametrosDetalleCompra);
         
         /*try{
@@ -298,7 +298,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($disponibilidadCompra, ['ver_butacas']);     
+        return $this->responseHelper->responseDatos($parametrosDetalleCompra);     
     }
      
 }
