@@ -56,6 +56,19 @@ class DisponibilidadRepository extends ServiceEntityRepository
        ;
    }
 
+   public function findEventosByidDetalleCompra(array $idsDetalleCompras): array
+   {
+        $entityManager = $this->getEntityManager();
+        // 'SELECT DISTINCT u.id FROM CmsArticle a JOIN a.user u'
+        $query = $entityManager->createQuery(
+            'SELECT DISTINCT u.idEvento
+            FROM App\Entity\Disponibilidad u 
+            where u.idDetalleCompra IN (:idDetallesCompra)'
+        )->setParameter('idDetallesCompra',$idsDetalleCompras, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+
+        return $query->getResult();
+   }
+
    /**
     * @return Disponibilidad[] Returns an array of Disponibilidad objects
     * Estado es Disponible, No disponible o Bloqueado

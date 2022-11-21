@@ -9,22 +9,23 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ButacaRepository::class)]
 class Butaca
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['ver_butacas'])]
+    #[Groups(['ver_butacas','comprar_butacas'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 15)]
-    #[Groups(['ver_butacas'])]
+    #[Groups(['ver_butacas','comprar_butacas'])]
     private ?string $codigoButaca = null;
     
     #[Groups(['ver_butacas'])]
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     #[ORM\JoinColumn(nullable: false)]
-
     private ?Celda $celda = null;
 
+    #[Groups(['ver_butacas'])]
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     private ?CategoriaButaca $categoriaButaca = null;
 
@@ -80,6 +81,8 @@ class Butaca
         $this->categoriaButaca = $categoriaButaca;
 
         return $this;
+
     }
+
 
 }

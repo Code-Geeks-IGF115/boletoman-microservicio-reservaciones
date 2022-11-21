@@ -8,21 +8,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
-use App\Repository\ButacaRepository;
-use App\Repository\CategoriaButacaRepository;
 
+use Exception;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
- #[Route('/disponibilidad')]
- class DisponibilidadController extends AbstractController
- {
+#[Route('/disponibilidad')]
+class DisponibilidadController extends AbstractController
+{
     private ResponseHelper $responseHelper;
+    private HttpClientInterface $client;
 
-    
-    public function __construct(ResponseHelper $responseHelper)
+    public function __construct(ResponseHelper $responseHelper,HttpClientInterface $client)
     {
-        $this->responseHelper = $responseHelper;
+        $this->responseHelper=$responseHelper;
+        $this->client = $client;
     }
+
      #[Route('/', name: 'app_disponibilidad_index', methods: ['GET'])]
       public function index(DisponibilidadRepository $disponibilidadRepository): Response
       {
@@ -119,6 +120,40 @@ use App\Repository\CategoriaButacaRepository;
         ];
         return $this->responseHelper->responseDatos($data);
     }
+    //Recibe en la ruta el parametro idUsuario y consulta
+    //al microservicio compras el idDetallesCompras del idUsuario
+
+    #[Route('/mis/eventos', name: 'app_mis_eventos',  methods: ['GET'])]
+    public function misEventos(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
+    {
+
+        $comprasResultado=$request->toArray();// recuperando ids detalle compras que envia microservicio compras
+        try{
+            //buscanto idEventos dado idDetalleCompra
+            
+            $eventos=$disponibilidadRepository->findEventosByidDetalleCompra($comprasResultado["idsDetallesCompra"]);
+            $idEventos=[];
+            foreach ($eventos as $key => $evento) {
+                $idEventos[]=$evento["idEvento"];
+            }
+            // dd($idEventos);
+            //Consulta a microservicio eventos
+            $eventosResultado = $this->client->request(
+                'GET', 
+                'https://boletoman-eventos.herokuapp.com/evento/mis/eventos',[
+                    'json'=>['idEventos' =>$idEventos],
+                    'timeout' => 20
+                ]
+            );
+            $resultado=$eventosResultado->toArray()["eventos"];
+            return $this->responseHelper->responseDatos(['eventos' =>$resultado]); 
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
+        }
+    }
+
+
+
 
 
      #[Route('/desbloquearbutacas', name: 'app_disponibilidad_desbloquear_butacas', methods: ['POST'])]
@@ -159,6 +194,8 @@ use App\Repository\CategoriaButacaRepository;
      #[Route('/comprarbutacas', name: 'app_disponibilidad_comprar_butacas', methods: ['POST'])]
      public function comprarbutacas(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
      {
+       
+        //Definir el estado habilitado para comprar
         $estado="Bloqueado";
         $parametros = $request->toArray();
         $butacasIDs=$parametros["butacas"];
@@ -178,11 +215,35 @@ use App\Repository\CategoriaButacaRepository;
         $cantidadButacasModificadas=$cantidadButacasBuscadas-$cantidadButacasCompradas;
         $mensaje=null;
         //id de butacas modificadas
-        
+        $butacasCompradas=[];
         if($cantidadButacasBuscadas==$cantidadButacasCompradas){
-            $mensaje='Butacas compradas con éxito';
-        }else{
-            $mensaje='Algunas butacas no fueron compradas';
+            //Modifica la disponible a todas las disponibilidades que corresponden
+            foreach ($disponibilidadesButaca as $key => $disponibilidadButaca)
+            {
+                $disponibilidadButaca->setDisponible('No disponible');
+                $butacasCompradas[]=$disponibilidadButaca;
+                $disponibilidadRepository->save($disponibilidadButaca, true);
+                // agregar aqui id butaca al array 
+            }
+
+            
+            return $this->responseHelper->responseDatos(
+                [
+                'message'=>'Se realizo la compra de butacas.',
+                'butacasCompradas'=>$butacasCompradas
+                ],
+                ['comprar_butacas'],
+                Response::HTTP_OK
+            );
+            }else{
+            return $this->responseHelper->responseDatos(
+                [
+                    'message'=>'No se pudo realizar la compra de todas las butacas butacas.',
+                    'butacasCompradas'=>$butacasCompradas
+                ],
+                ['comprar_butacas'],
+                Response::HTTP_PRECONDITION_FAILED,
+            );
         }
         //agregar array ids de butacas modificadas a la data
         $data=[
@@ -193,6 +254,43 @@ use App\Repository\CategoriaButacaRepository;
         ];
         return $this->responseHelper->responseDatos($data);
      }
+
+     #[Route('/mis/boletos', name: 'mis_boletos', methods: ['POST'])]
+    public function buscarCompras(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
+    {
+        $mensaje="Hola Mundo!";
+        $variable=[];
+        $parametrosDetalleCompra = $request->toArray();
+        foreach ($parametrosDetalleCompra["idDetalleCompra"] as $key) {
+            $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
+            if ($disponibilidadCompra != null) {
+                $variable[] = $disponibilidadCompra;
+            }
+            
+        }
+        //dd($variable);
+        //var_dump($parametrosDetalleCompra);
+        
+        /*try{
+            // recibiendo parametros
+            //SOY SERVIDOR
+            //$parametros=$request->toArray(); 
+            //$miNombre=$parametros["nombreCompleto"];
+            // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
+            $response = $this->client->request(
+                'POST', 
+                'https://boletoman-reservaciones.herokuapp.com/', [
+                // defining data using an array of parameters
+                'json' => ['miNombre' => $idCompra],
+            ]);
+            $resultadosDeConsulta=$response->toArray();
+            $mensaje=$resultadosDeConsulta["message"];
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($mensaje);  
+        }*/
+
+        return $this->responseHelper->responseDatos($variable, ['ver_butacas']);     
+    }
      
      #[Route('/butacasVendidas', name: 'app_disponibilidad_comprar_butacas', methods: ['POST'])]
      public function butacasVendidas(Request $request, DisponibilidadRepository $disponibilidadRepository): Response{
