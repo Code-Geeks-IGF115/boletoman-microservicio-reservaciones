@@ -278,10 +278,10 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         $mensaje="Hola Mundo!";
         $variable=[];
         $parametrosDetalleCompra = $request->toArray();
-        foreach ($parametrosDetalleCompra["idsDetalleCompra"] as $key) {
+        /*foreach ($parametrosDetalleCompra["idsDetalleCompra"] as $key) {
             $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
             $variable[] = $disponibilidadCompra;
-        }
+        }*/
         //dd($variable);
         //var_dump($parametrosDetalleCompra);
         
