@@ -278,7 +278,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         $mensaje="Hola Mundo!";
         $parametrosDetalleCompra = $request->toArray();
         //$disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $parametrosDetalleCompra);
-        dd($parametrosDetalleCompra);
+        var_dump($parametrosDetalleCompra);
         
         /*try{
             // recibiendo parametros
