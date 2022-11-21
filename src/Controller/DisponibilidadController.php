@@ -144,6 +144,7 @@ class DisponibilidadController extends AbstractController
                 'GET', 
                 'https://boletoman-eventos.herokuapp.com/evento/mis/eventos',[
                     'json'=>['idEventos' =>$idEventos],
+                    'timeout' => 20
                 ]
             );
             $resultado=$eventosResultado->toArray()["eventos"];
