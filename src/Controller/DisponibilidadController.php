@@ -314,7 +314,7 @@ class DisponibilidadController extends AbstractController
     public function buscarCompras(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
     {
         $mensaje="Hola Mundo!";
-        $variable=array(null);
+        $variable=array();
         $parametrosDetalleCompra = $request->toArray();
         foreach ($parametrosDetalleCompra as $key) {
             $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
