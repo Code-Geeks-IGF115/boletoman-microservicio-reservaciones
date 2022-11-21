@@ -11,12 +11,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
+use Exception;
 use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
-
-
-
-
+#[Route('/disponibilidad')]
+class DisponibilidadController extends AbstractController
+{
+    private ResponseHelper $responseHelper;
  #[Route('/disponibilidad')]
  class DisponibilidadController extends AbstractController
  {
@@ -124,6 +125,39 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         ];
         return $this->responseHelper->responseDatos($data);
     }
+    //Recibe en la ruta el parametro idUsuario y consulta
+    //al microservicio compras el idDetallesCompras del idUsuario
+
+    #[Route('/mis/eventos', name: 'app_mis_eventos',  methods: ['GET'])]
+    public function misEventos(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
+    {
+
+        $comprasResultado=$request->toArray();// recuperando ids detalle compras que envia microservicio compras
+        try{
+            //buscanto idEventos dado idDetalleCompra
+            
+            $eventos=$disponibilidadRepository->findEventosByidDetalleCompra($comprasResultado["idsDetallesCompra"]);
+            $idEventos=[];
+            foreach ($eventos as $key => $evento) {
+                $idEventos[]=$evento["idEvento"];
+            }
+            // dd($idEventos);
+            //Consulta a microservicio eventos
+            $eventosResultado = $this->client->request(
+                'GET', 
+                'https://boletoman-eventos.herokuapp.com/evento/mis/eventos',[
+                    'json'=>['idEventos' =>$idEventos],
+                ]
+            );
+            return $eventosResultado;
+            // return $this->responseHelper->responseDatos(['idEventos' =>$idEventos]); 
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
+        }
+    }
+
+
+
 
 
      #[Route('/desbloquearbutacas', name: 'app_disponibilidad_desbloquear_butacas', methods: ['POST'])]
