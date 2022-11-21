@@ -344,7 +344,7 @@ class DisponibilidadController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($variable, ['ver_butacas']);     
+        return $this->responseHelper->responseDatos($variable);     
     }
      
 }
