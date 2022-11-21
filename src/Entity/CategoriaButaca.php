@@ -39,10 +39,14 @@ class CategoriaButaca
     #[Groups(['ver_categoria','ver_evento'])]
     private Collection $celdas;
 
+    #[ORM\OneToMany(mappedBy: 'categoriaButaca', targetEntity: Butaca::class)]
+    private Collection $butacas;
+
     public function __construct()
     {
         $this->celdas = new ArrayCollection();
         $this->descuentos = new ArrayCollection();
+        $this->butacas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,6 +126,36 @@ class CategoriaButaca
             // set the owning side to null (unless already changed)
             if ($celda->getCategoriaButaca() === $this) {
                 $celda->setCategoriaButaca(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Butaca>
+     */
+    public function getButacas(): Collection
+    {
+        return $this->butacas;
+    }
+
+    public function addButaca(Butaca $butaca): self
+    {
+        if (!$this->butacas->contains($butaca)) {
+            $this->butacas->add($butaca);
+            $butaca->setCategoriaButaca($this);
+        }
+
+        return $this;
+    }
+
+    public function removeButaca(Butaca $butaca): self
+    {
+        if ($this->butacas->removeElement($butaca)) {
+            // set the owning side to null (unless already changed)
+            if ($butaca->getCategoriaButaca() === $this) {
+                $butaca->setCategoriaButaca(null);
             }
         }
 
