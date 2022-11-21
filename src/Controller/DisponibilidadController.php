@@ -319,7 +319,7 @@ class DisponibilidadController extends AbstractController
         foreach ($parametrosDetalleCompra as $key) {
             $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
             if ($disponibilidadCompra != null) {
-                $variable[] = $disponibilidadCompra->getDisponible();
+                $variable[] = $disponibilidadCompra;
             }
             
         }
@@ -344,7 +344,7 @@ class DisponibilidadController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($variable);     
+        return $this->responseHelper->responseDatos($variable, ['ver_butacas']);     
     }
      
 }
