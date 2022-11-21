@@ -314,12 +314,21 @@ class DisponibilidadController extends AbstractController
     public function buscarCompras(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
     {
         $mensaje="Hola Mundo!";
-        $variable=array();
+        $variable=[];
         $parametrosDetalleCompra = $request->toArray();
         foreach ($parametrosDetalleCompra as $key) {
             $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
             if ($disponibilidadCompra != null) {
-                $variable[] = $disponibilidadCompra;
+                $variable[] = [
+                    'id'=>$disponibilidadCompra->getId(),
+                    'disponible'=>$disponibilidadCompra->getDisponible(),
+                    'idEvento'=>$disponibilidadCompra->getIdEvento(),
+                    'idDetalleCompra'=>$disponibilidadCompra->getIdDetalleCompra(),
+                    'idButaca' => $disponibilidadCompra->getButaca()->getId(),
+                    'codigoButaca'=> $disponibilidadCompra->getButaca()->getCodigoButaca(),
+                    'idCelda' => $disponibilidadCompra->getButaca()->getCelda()->getId(),
+                    'idCategoriaButaca' => $disponibilidadCompra->getButaca()->getCategoriaButaca()->getId()
+                ];
             }
             
         }
@@ -344,7 +353,7 @@ class DisponibilidadController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($variable, ['ver_butacas']);     
+        return $this->responseHelper->responseDatos($variable);     
     }
      
 }
