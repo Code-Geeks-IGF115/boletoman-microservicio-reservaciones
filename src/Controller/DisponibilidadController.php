@@ -12,23 +12,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
 use Exception;
-use phpDocumentor\Reflection\Types\Null_;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 #[Route('/disponibilidad')]
 class DisponibilidadController extends AbstractController
 {
     private ResponseHelper $responseHelper;
- #[Route('/disponibilidad')]
- class DisponibilidadController extends AbstractController
- {
-    private ResponseHelper $responseHelper;
+    private $client;
 
-    
-    public function __construct(ResponseHelper $responseHelper)
+    public function __construct(ResponseHelper $responseHelper,HttpClientInterface $client)
     {
-        $this->responseHelper = $responseHelper;
-       
+        $this->responseHelper=$responseHelper;
+        $this->client = $client;
     }
+
      #[Route('/', name: 'app_disponibilidad_index', methods: ['GET'])]
       public function index(DisponibilidadRepository $disponibilidadRepository): Response
       {
@@ -149,8 +146,8 @@ class DisponibilidadController extends AbstractController
                     'json'=>['idEventos' =>$idEventos],
                 ]
             );
-            return $eventosResultado;
-            // return $this->responseHelper->responseDatos(['idEventos' =>$idEventos]); 
+            $idEventos= $eventosResultado->toArray()["eventos"];
+            return $this->responseHelper->responseDatos(['idEventos' =>$idEventos]); 
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
         }
