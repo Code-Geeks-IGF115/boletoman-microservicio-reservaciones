@@ -297,7 +297,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($parametrosDetalleCompra, ['ver_boletos']);     
+        return $this->responseHelper->responseDatos("esto si funciona");     
     }
      
 }
