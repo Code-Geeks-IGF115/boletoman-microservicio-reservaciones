@@ -276,8 +276,13 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
     public function buscarCompras(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
     {
         $mensaje="Hola Mundo!";
+        $variable=[];
         $parametrosDetalleCompra = $request->toArray();
-        $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $parametrosDetalleCompra["idsDetalleCompra"][0]]);
+        foreach ($parametrosDetalleCompra["idsDetalleCompra"] as $key) {
+            $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
+            $variable[] = $disponibilidadCompra;
+        }
+        //dd($variable);
         //var_dump($parametrosDetalleCompra);
         
         /*try{
@@ -298,7 +303,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($disponibilidadCompra, ['ver_butacas']);     
+        return $this->responseHelper->responseDatos($variable, ['ver_butacas']);     
     }
      
 }
