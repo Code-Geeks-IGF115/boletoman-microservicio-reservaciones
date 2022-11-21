@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
-
+use Exception;
 #[Route('/disponibilidad')]
 class DisponibilidadController extends AbstractController
 {
@@ -114,6 +114,34 @@ class DisponibilidadController extends AbstractController
         ];
         return $this->responseHelper->responseDatos($data);
     }
+    //Recibe en la ruta el parametro idUsuario y consulta
+    //al microservicio compras el idDetallesCompras del idUsuario
+
+    #[Route('/mis/eventos', name: 'app_mis_eventos',  methods: ['GET'])]
+    public function misEventos(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
+    {
+
+        $comprasResultado=$request->toArray();// recuperando ids detalle compras que envia microservicio compras
+        try{
+            //buscanto idEventos dado idDetalleCompra
+            
+            $idEventos=$disponibilidadRepository->findEventosByidDetalleCompra($comprasResultado["idsDetallesCompra"]);
+            // dd($idEventos);
+            //Consulta a microservicio eventos
+            $eventosResultado = $this->client->request(
+                'POST', 
+                'https://boletoman-eventos.herokuapp.com/evento/mis/eventos',[
+                    'json'=>['idEventos' =>$idEventos],
+                ]
+            );
+            return $eventosResultado;
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
+        }
+    }
+
+
+
 
 
     // #[Route('/desbloquearbutacas', name: 'app_disponibilidad_edit', methods: ['GET', 'POST'])]
