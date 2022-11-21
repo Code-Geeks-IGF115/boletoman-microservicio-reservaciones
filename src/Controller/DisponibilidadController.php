@@ -280,7 +280,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         $parametrosDetalleCompra = $request->toArray();
         foreach ($parametrosDetalleCompra["idsDetalleCompra"] as $key) {
             $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
-            $variable[] = $disponibilidadCompra->getId();
+            $variable[] = $disponibilidadCompra;
         }
         //dd($variable);
         //var_dump($parametrosDetalleCompra);
@@ -303,7 +303,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($variable);     
+        return $this->responseHelper->responseDatos($variable, ['ver_butacas']);     
     }
      
 }
