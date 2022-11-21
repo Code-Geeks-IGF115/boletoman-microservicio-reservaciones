@@ -87,6 +87,22 @@ class DisponibilidadRepository extends ServiceEntityRepository
            ->getResult()
        ;
    }
+   public function findByDisponibilidade($idEvento, $estado): array
+   {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT a.codigoButaca, cb.codigo, cb.nombre, u.idDetalleCompra
+            FROM App\Entity\Disponibilidad u 
+            JOIN u.butaca a 
+            JOIN a.celda c 
+            JOIN c.categoriaButaca cb
+            where u.disponible = :disponible and u.idEvento = :idEvento
+            '
+        )->setParameter('disponible', $estado)
+        ->setParameter('idEvento',$idEvento);
+
+        return $query->getResult();
+   }
    public function findByEstado($idEvento, $estado, array $idButacas): array
    {
        return $this->createQueryBuilder('d')
