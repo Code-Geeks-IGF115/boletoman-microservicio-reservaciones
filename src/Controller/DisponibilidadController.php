@@ -18,7 +18,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class DisponibilidadController extends AbstractController
 {
     private ResponseHelper $responseHelper;
-    private $client;
+    private HttpClientInterface $client;
 
     public function __construct(ResponseHelper $responseHelper,HttpClientInterface $client)
     {
@@ -146,8 +146,8 @@ class DisponibilidadController extends AbstractController
                     'json'=>['idEventos' =>$idEventos],
                 ]
             );
-            $idEventos= $eventosResultado->toArray()["eventos"];
-            return $this->responseHelper->responseDatos(['idEventos' =>$idEventos]); 
+            $resultado=$eventosResultado->toArray()["eventos"];
+            return $this->responseHelper->responseDatos(['idEventos' =>$resultado]); 
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
         }
