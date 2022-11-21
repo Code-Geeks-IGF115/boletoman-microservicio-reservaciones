@@ -276,7 +276,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
     public function buscarCompras(Request $request): JsonResponse
     {
         $mensaje="Hola Mundo!";
-        //$parametrosDetalleCompra = $request->toArray();
+        $parametrosDetalleCompra = $request->toArray();
         //var_dump($parametrosDetalleCompra);
         
         /*try{
@@ -297,7 +297,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos("si lo envia");     
+        return $this->responseHelper->responseDatos($parametrosDetalleCompra);     
     }
      
 }
