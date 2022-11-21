@@ -125,16 +125,21 @@ class DisponibilidadController extends AbstractController
         try{
             //buscanto idEventos dado idDetalleCompra
             
-            $idEventos=$disponibilidadRepository->findEventosByidDetalleCompra($comprasResultado["idsDetallesCompra"]);
+            $eventos=$disponibilidadRepository->findEventosByidDetalleCompra($comprasResultado["idsDetallesCompra"]);
+            $idEventos=[];
+            foreach ($eventos as $key => $evento) {
+                $idEventos[]=$evento["idEvento"];
+            }
             // dd($idEventos);
             //Consulta a microservicio eventos
             $eventosResultado = $this->client->request(
-                'POST', 
+                'GET', 
                 'https://boletoman-eventos.herokuapp.com/evento/mis/eventos',[
                     'json'=>['idEventos' =>$idEventos],
                 ]
             );
             return $eventosResultado;
+            // return $this->responseHelper->responseDatos(['idEventos' =>$idEventos]); 
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
         }
