@@ -16,7 +16,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class DisponibilidadController extends AbstractController
 {
     private ResponseHelper $responseHelper;
-    private $client;
+    private HttpClientInterface $client;
 
     public function __construct(ResponseHelper $responseHelper,HttpClientInterface $client)
     {
