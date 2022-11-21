@@ -280,7 +280,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
         $parametrosDetalleCompra = $request->toArray();
         foreach ($parametrosDetalleCompra["idsDetalleCompra"] as $key) {
             $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
-            $variable[] = $disponibilidadCompra;
+            $variable[] = $disponibilidadCompra->getId();
         }
         //dd($variable);
         //var_dump($parametrosDetalleCompra);
