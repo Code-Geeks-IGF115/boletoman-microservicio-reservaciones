@@ -277,7 +277,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
     {
         $mensaje="Hola Mundo!";
         $parametrosDetalleCompra = $request->toArray();
-        //var_dump($parametrosDetalleCompra);
+        dd($parametrosDetalleCompra);
         
         /*try{
             // recibiendo parametros
