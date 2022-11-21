@@ -303,7 +303,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($variable, ['ver_butacas']);     
+        return $this->responseHelper->responseDatos($parametrosDetalleCompra);     
     }
      
 }
