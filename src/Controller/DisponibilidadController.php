@@ -147,7 +147,7 @@ class DisponibilidadController extends AbstractController
                 ]
             );
             $resultado=$eventosResultado->toArray()["eventos"];
-            return $this->responseHelper->responseDatos(['idEventos' =>$resultado]); 
+            return $this->responseHelper->responseDatos(['eventos' =>$resultado]); 
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
         }
