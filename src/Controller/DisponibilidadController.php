@@ -297,7 +297,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos("esto si funciona");     
+        return $this->responseHelper->responseDatos("si lo envia");     
     }
      
 }
