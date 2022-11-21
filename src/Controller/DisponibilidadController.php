@@ -316,7 +316,7 @@ class DisponibilidadController extends AbstractController
         $mensaje="Hola Mundo!";
         $variable=array(null);
         $parametrosDetalleCompra = $request->toArray();
-        foreach ($parametrosDetalleCompra["id"] as $key) {
+        foreach ($parametrosDetalleCompra as $key) {
             $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $key]);
             if ($disponibilidadCompra != null) {
                 $variable[] = $disponibilidadCompra->getDisponible();
