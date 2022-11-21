@@ -10,14 +10,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Disponibilidad
 {
     #[ORM\Id]
-    #[Groups(['ver_butacas'])]
     #[ORM\GeneratedValue]
+    #[Groups(['ver_butacas'])]
     #[ORM\Column]
     private ?int $id = null;
     
-    #[Groups(['ver_disponibilidad'])]
+    #[Groups(['ver_disponibilidad', 'ver_butacas'])]
     #[ORM\Column(length: 100)]
-    #[Groups(['ver_butacas'])]
     private ?string $disponible = null;
 
    

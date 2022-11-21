@@ -273,10 +273,11 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
      }
 
      #[Route('/mis/boletos', name: 'mis_boletos', methods: ['POST'])]
-    public function buscarCompras(Request $request): JsonResponse
+    public function buscarCompras(Request $request, DisponibilidadRepository $disponibilidadRepository): JsonResponse
     {
         $mensaje="Hola Mundo!";
         $parametrosDetalleCompra = $request->toArray();
+        $disponibilidadCompra = $disponibilidadRepository->findOneBy(['idDetalleCompra' => $parametrosDetalleCompra[0]["id"]]);
         //dd($parametrosDetalleCompra);
         
         /*try{
@@ -297,7 +298,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos($parametrosDetalleCompra, ['ver_boletos']);     
+        return $this->responseHelper->responseDatos($disponibilidadCompra, ['ver_butacas']);     
     }
      
 }

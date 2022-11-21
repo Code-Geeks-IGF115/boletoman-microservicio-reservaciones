@@ -22,9 +22,9 @@ class Butaca
     #[Groups(['ver_butacas'])]
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     #[ORM\JoinColumn(nullable: false)]
-
     private ?Celda $celda = null;
 
+    #[Groups(['ver_butacas'])]
     #[ORM\ManyToOne(inversedBy: 'butacas')]
     private ?CategoriaButaca $categoriaButaca = null;
 
