@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\{JsonResponse};
+use Symfony\Component\HttpFoundation\{Response,JsonResponse};
 use Symfony\Component\Serializer\SerializerInterface;
 
 class ResponseHelper
@@ -13,7 +13,7 @@ class ResponseHelper
     {
         $this->serializer = $serializer;
     }
-    public function responseDatos($data,$groups = null): JsonResponse
+    public function responseDatos($data,$groups = null, $status=Response::HTTP_OK): JsonResponse
     {
         $response=new JsonResponse();
         $response->headers->set('Access-Control-Allow-Origin', '%env(resolve:CORS_ALLOW_ORIGIN)%');
@@ -23,8 +23,10 @@ class ResponseHelper
 
             $result = $this->serializer->serialize($data,'json');
         }
-        return $response->fromJsonString($result);
+        return $response->fromJsonString($result, $status);
     }
+
+ 
 
     public function responseDatosNoValidos($message=null): JsonResponse
     {
