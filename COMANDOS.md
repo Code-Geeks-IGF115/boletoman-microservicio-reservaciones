@@ -12,7 +12,7 @@ symfony console make:Entity <ClassName>
 
 *3. crear base de datos*
 ```
- 
+ symfony console doctrine:database:create
 ```
 *4. hacer migracion*
 ```
