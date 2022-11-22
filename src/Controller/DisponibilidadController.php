@@ -272,31 +272,13 @@ class DisponibilidadController extends AbstractController
                     'idButaca' => $disponibilidadCompra->getButaca()->getId(),
                     'codigoButaca'=> $disponibilidadCompra->getButaca()->getCodigoButaca(),
                     'idCelda' => $disponibilidadCompra->getButaca()->getCelda()->getId(),
-                    'idCategoriaButaca' => $disponibilidadCompra->getButaca()->getCategoriaButaca()->getId()
+                    'idCategoriaButaca' => $disponibilidadCompra->getButaca()->getCategoriaButaca()->getId(),
+                    'nombreCategoria' => $disponibilidadCompra->getButaca()->getCategoriaButaca()->getNombre()
                 ];
-            }
-            
+            }     
         }
-        //dd($variable);
-        //var_dump($parametrosDetalleCompra);
-        
-        /*try{
-            // recibiendo parametros
-            //SOY SERVIDOR
-            //$parametros=$request->toArray(); 
-            //$miNombre=$parametros["nombreCompleto"];
-            // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
-            $response = $this->client->request(
-                'POST', 
-                'https://boletoman-reservaciones.herokuapp.com/', [
-                // defining data using an array of parameters
-                'json' => ['miNombre' => $idCompra],
-            ]);
-            $resultadosDeConsulta=$response->toArray();
-            $mensaje=$resultadosDeConsulta["message"];
-        }catch(Exception $e){
-            return $this->responseHelper->responseDatosNoValidos($mensaje);  
-        }*/
+        //codigo para crear pdf
+        //$html = this->renderView;        
 
         return $this->responseHelper->responseDatos($variable);     
     }
