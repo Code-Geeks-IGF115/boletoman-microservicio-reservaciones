@@ -13,6 +13,7 @@ symfony console make:Entity <ClassName>
 *3. crear base de datos*
 ```
  symfony console doctrine:database:create
+ php bin/console doctrine:database:create
 ```
 *4. hacer migracion*
 ```
@@ -20,6 +21,7 @@ symfony console make:migration
 
 ```
 symfony console doctrine:migrations:migrate
+php bin/console doctrine:migrations:migrate
 ```
 *6. iniciar Servidor*
 ```

@@ -60,7 +60,7 @@ class CeldaController extends AbstractController
         ]);
     }
   
-    #[Route('/categoria/{idCategoria}', name: 'asignar_categoria_a_celda', methods: ['POST'])]
+    #[Route('/categoria/{idCategoria}', name: 'asignar_categoria_a_celda')]
     public function asignarCategoriaACeldas(
         Request $request, CategoriaButacaRepository $categoriaButacaRepository,
         CeldaRepository $celdaRepository, ButacaRepository $butacaRepository, 
