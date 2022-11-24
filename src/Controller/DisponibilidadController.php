@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\CategoriaButaca;
 use App\Entity\Disponibilidad;
+use App\Repository\ButacaRepository;
 use App\Repository\CategoriaButacaRepository;
 use Symfony\Component\HttpFoundation\{Response, JsonResponse};
 use App\Repository\DisponibilidadRepository;
@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
 use Exception;
-use phpDocumentor\Reflection\Types\Null_;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
 
 
 
@@ -47,6 +45,22 @@ class DisponibilidadController extends AbstractController
         }
         return $this->responseHelper->responseDatos($butacas);
     }
+    #[Route('/evento/{idEvento}/sala/{idSala}', name: 'asignar_categoria_a_celda', methods: ['POST'])]
+    public function asignarSalaAEvento(
+        DisponibilidadRepository $disponibilidadRepository,
+        $idEvento,
+        $idSala
+        ){
+            $butacas=$disponibilidadRepository->findButacasBySalaDeEventos($idSala);
+            foreach($butacas as $butaca){
+                $disponibilidad=new Disponibilidad();
+                $disponibilidad->setButaca($butaca);
+                $disponibilidad->setDisponible('Disponible');
+                $disponibilidad->setIdEvento($idEvento);
+                $disponibilidadRepository->save($disponibilidad,true);
+            }
+            return $this->responseHelper->responseMessage('Sala de Eventos Asignada.');
+        }
 
     //      #[Route('/new', name: 'app_disponibilidad_new', methods: ['GET', 'POST'])]
     //      public function new(Request $request, DisponibilidadRepository $disponibilidadRepository): Response

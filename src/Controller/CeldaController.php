@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Butaca;
-use App\Entity\CategoriaButaca;
 use App\Entity\Celda;
-use App\Entity\Disponibilidad;
 use App\Form\CeldaType;
 use App\Repository\ButacaRepository;
 use App\Repository\CeldaRepository;
@@ -13,13 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\{Response, JsonResponse};
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use App\Repository\CategoriaButacaRepository;
-use App\Repository\DisponibilidadRepository;
 use App\Service\ResponseHelper;
-use Exception;
-use Nelmio\CorsBundle;
 
 #[Route('/celda')]
 class CeldaController extends AbstractController
@@ -66,7 +59,7 @@ class CeldaController extends AbstractController
             'celda' => $celda,
         ]);
     }
-
+  
     #[Route('/categoria/{idCategoria}', name: 'asignar_categoria_a_celda', methods: ['POST'])]
     public function asignarCategoriaACeldas(
         Request $request, CategoriaButacaRepository $categoriaButacaRepository,

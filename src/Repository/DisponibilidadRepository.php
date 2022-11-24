@@ -106,6 +106,23 @@ class DisponibilidadRepository extends ServiceEntityRepository
 
     return $query->getResult();
    }
+   public function findButacasBySalaDeEventos($idSalaDeEventos): array
+   {
+    $entityManager = $this->getEntityManager();
+    $query = $entityManager->createQuery(
+        'SELECT u
+        FROM App\Entity\Butaca u 
+        JOIN u.celda c 
+        JOIN c.salaDeEventos s
+        where s = :idSalaDeEventos 
+        ORDER BY c.id
+        '
+    )
+    ->setParameter('idSalaDeEventos', $idSalaDeEventos)
+    ;
+
+    return $query->getResult();
+   }
 //    /**
 //     * @return Disponibilidad[] Returns an array of Disponibilidad objects
 //     */

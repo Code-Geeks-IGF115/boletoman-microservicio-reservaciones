@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use App\Repository\DisponibilidadRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: DisponibilidadRepository::class)]
 class Disponibilidad
 {
-
+    
     #[ORM\Id]
     #[Groups(['ver_butacas','comprar_butacas'])]
     #[ORM\GeneratedValue]
@@ -23,7 +23,7 @@ class Disponibilidad
     #[ORM\Column(nullable: true)]
     #[Groups(['ver_butacas', 'comprar_butacas'])]
     private ?string $idEvento = null;
-
+    
 
     #[ORM\Column(nullable: true)]
     #[Groups(['ver_butacas', 'comprar_butacas'])]
