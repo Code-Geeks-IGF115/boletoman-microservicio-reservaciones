@@ -39,11 +39,11 @@ class DisponibilidadController extends AbstractController
         $butacas=[];
         try{
             $butacas=$disponibilidadRepository->findBy(['idEvento'=>$idEvento]);
-            dd($butacas);
+            // dd($butacas);
         }catch(Exception $e){
             $butacas=[];
         }
-        return $this->responseHelper->responseDatos($butacas);
+        return $this->responseHelper->responseDatos($butacas,['comprar_butacas']);
     }
     #[Route('/evento/{idEvento}/sala/{idSala}', name: 'asignar_categoria_a_celda', methods: ['POST'])]
     public function asignarSalaAEvento(
