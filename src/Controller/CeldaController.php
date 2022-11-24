@@ -67,12 +67,11 @@ class CeldaController extends AbstractController
         ]);
     }
 
-    #[Route('/evento/{idEvento}/categoria/{idCategoria}', name: 'asignar_categoria_a_celda', methods: ['POST'])]
+    #[Route('/categoria/{idCategoria}', name: 'asignar_categoria_a_celda', methods: ['POST'])]
     public function asignarCategoriaACeldas(
         Request $request, CategoriaButacaRepository $categoriaButacaRepository,
         CeldaRepository $celdaRepository, ButacaRepository $butacaRepository, 
-        $idCategoria, $idEvento, 
-        DisponibilidadRepository $disponibilidadRepository): JsonResponse {
+        $idCategoria): JsonResponse {
 
         //recuperando la categoria butaca
         $categoriaButaca = $categoriaButacaRepository->find($idCategoria);
@@ -88,70 +87,25 @@ class CeldaController extends AbstractController
         }
         $estado = ["Disponible", "Bloqueado"];//estados de disponibilidad
         $contadorCeldasModificadas =0;
-            
-        //consulta que butacas estan disponibles y sin evento para eliminarlas
-        $consultaButacasVacias = $disponibilidadRepository->findBy(['disponible' => $estado[0], 'idEvento' => null]);
-        $contadorConsultaButacasVacias = count($consultaButacasVacias);
-            
-        //si hay butacas disponibles sin evento, se eliminan
-        if ($contadorConsultaButacasVacias > 0) {
-            foreach ($consultaButacasVacias as $key) {
-                    $disponibilidadRepository->remove($consultaButacasVacias[$key], true);
-                    $butacaRepository->remove($consultaButacasVacias[$key]->getButaca(), true);
-            }
-        }
 
         foreach ($celdas["celdas"] as $key => $celda) {
             $consultaCelda = $celdaRepository->findOneBy(['salaDeEventos' => $salaDeEvento, 
             'fila' => $celda["fila"], 'columna' => $celda["columna"]]);
 
             if ($consultaCelda != null) {
-                $butacasACrear = 0;
                 $consultaCelda->setCantidadButacas($celda["cantidadButacas"]);
                 $consultaCelda->setCategoriaButaca($categoriaButaca);
                     
-                $variable=array(null);
-                //se cuenta cuantas butacas hay de la celda 
-                $butacasCelda = $butacaRepository->findBy(['celda' =>$consultaCelda->getId()]);
-                foreach ($butacasCelda as $key => $value) {
-                        
-                    $variable[] = $butacasCelda[$key]->getId();
-                }
-                //sabiendo las butacas de la celda, se filtran por el evento seleccionado y disponibles
-                $butacaDisponibilidad = $disponibilidadRepository->findByEstado($idEvento, $estado[0], $variable);
-                $cantidadButacas = count($butacaDisponibilidad);
+                //crear  butacas
+                for ($i=0; $i < $celda["cantidadButacas"]; $i++) { 
 
-                //se hace una resta a las butacas que pide el json request para saber cuantas butacas necesita crear o quitar
-                $butacasACrear = $celda["cantidadButacas"] - $cantidadButacas;
-            
-                //si hay mas butacas creadas de las que pide el json request, se eliminan las sobrantes
-                if ($butacasACrear < 0) {
-                       
-                    for ($i=0; $i < ($butacasACrear*-1); $i++) {
-                                        
-                        $disponibilidadRepository->remove($butacaDisponibilidad[$cantidadButacas-($i+1)], true);
-                        $butacaRepository->remove($butacaDisponibilidad[$cantidadButacas-($i+1)]->getButaca(), true);
-                    }           
+                    $newButaca = new Butaca();
+                    $newButaca->setCodigoButaca(strval(($i+1)."-".$categoriaButaca->getCodigo()));
+                    $newButaca->setCategoriaButaca($categoriaButaca);
+                    $newButaca->setCelda($consultaCelda);
+                    $butacaRepository->save($newButaca, true);        
                 }
-                //si hay menos butacas creadas de las que pide el json request, se crean las que faltan
-                elseif ($butacasACrear > 0) {
-                    //crear disponibilidades y butacas
-                    for ($i=0; $i < $butacasACrear; $i++) { 
-
-                        $newButaca = new Butaca();
-                        $newButaca->setCodigoButaca(strval(($i+1+$cantidadButacas)."-".$categoriaButaca->getCodigo()));
-                        $newButaca->setCategoriaButaca($categoriaButaca);
-                        $newButaca->setCelda($consultaCelda);
-                        $butacaRepository->save($newButaca, true);
-        
-                        $newDisponibilidad = new Disponibilidad();
-                        $newDisponibilidad->setButaca($newButaca);
-                        $newDisponibilidad->setDisponible($estado[0]);
-                        $newDisponibilidad->setIdEvento($idEvento);
-        
-                        $disponibilidadRepository->save($newDisponibilidad, true);         
-                    }
-                }       
+                      
                 $celdaRepository->save($consultaCelda, true);
                 $contadorCeldasModificadas++;
             }          
