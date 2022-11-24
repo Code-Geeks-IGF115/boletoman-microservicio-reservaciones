@@ -22,12 +22,12 @@ class Disponibilidad
 
     #[ORM\Column(nullable: true)]
     #[Groups(['ver_butacas', 'comprar_butacas'])]
-    private ?int $idEvento = null;
+    private ?string $idEvento = null;
 
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['ver_butacas', 'comprar_butacas'])]
-    #[ORM\JoinColumn(nullable: true)]
+    // #[ORM\JoinColumn(nullable: true)]
     private ?int $idDetalleCompra = null;
 
     #[ORM\ManyToOne]

@@ -14,7 +14,7 @@ class CeldaType extends AbstractType
         $builder
             ->add('fila')
             ->add('columna')
-            ->add('cantidadMesas')
+            // ->add('cantidadMesas')
             ->add('cantidadButacas')
             ->add('categoriaButaca')
         ;

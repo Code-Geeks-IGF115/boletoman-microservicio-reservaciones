@@ -67,7 +67,7 @@ class CeldaController extends AbstractController
         ]);
     }
 
-    #[Route('/{idCategoria}/{idEvento}/new', name: 'asignar_categoria_a_celda', methods: ['POST'])]
+    #[Route('/evento/{idEvento}/categoria/{idCategoria}', name: 'asignar_categoria_a_celda', methods: ['POST'])]
     public function asignarCategoriaACeldas(
         Request $request, CategoriaButacaRepository $categoriaButacaRepository,
         CeldaRepository $celdaRepository, ButacaRepository $butacaRepository, 
@@ -139,15 +139,16 @@ class CeldaController extends AbstractController
                     for ($i=0; $i < $butacasACrear; $i++) { 
 
                         $newButaca = new Butaca();
-                        $newButaca->setCodigoButaca(strval(($i+1+$cantidadButacas).":".$categoriaButaca->getCodigo()));
+                        $newButaca->setCodigoButaca(strval(($i+1+$cantidadButacas)."-".$categoriaButaca->getCodigo()));
+                        $newButaca->setCategoriaButaca($categoriaButaca);
                         $newButaca->setCelda($consultaCelda);
+                        $butacaRepository->save($newButaca, true);
         
                         $newDisponibilidad = new Disponibilidad();
                         $newDisponibilidad->setButaca($newButaca);
                         $newDisponibilidad->setDisponible($estado[0]);
                         $newDisponibilidad->setIdEvento($idEvento);
         
-                        $butacaRepository->save($newButaca, true);
                         $disponibilidadRepository->save($newDisponibilidad, true);         
                     }
                 }       
